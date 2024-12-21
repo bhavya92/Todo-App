@@ -13,8 +13,8 @@ const { todoRouter } = require('./routes/todo');
 const app = express();
 app.use(express.json());
 
-app.use('/api/v1/user',userRouter);
-app.use('/api/v1/todo',todoRouter);
+app.use('/user',userRouter);
+app.use('/todo',todoRouter);
 
 async function main() {
     try {

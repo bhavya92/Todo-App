@@ -14,19 +14,13 @@ const userSchema = new Schema({
     password : String,
     firstName : String,
     lastName : String,
-    todos : {
-        type:[ObjectId],
-        ref:'todo'
-    }
+    todos : [ObjectId]
 });
 
 const todoSchema = new Schema({
     title:String,
     done:Boolean,
-    userId: {
-        type: ObjectId,
-        ref: 'User'
-    }
+    userId:ObjectId
 });
 
 const userModel = mongoose.model('User',userSchema);
