@@ -17,9 +17,14 @@ app.use('/api/v1/user',userRouter);
 app.use('/api/v1/todo',todoRouter);
 
 async function main() {
-    await mongoose.connect(process.env.MONGO_URL);
-    app.listen(3000);
-    console.log('Listening on Port 3000');
+    try {
+        await mongoose.connect(process.env.MONGO_URL);
+        app.listen(3000);
+        console.log('Listening on Port 3000');
+    } catch(error) {
+        console.log("Error connecting to DB " + error);
+    }
+    
 }
 
 main()
