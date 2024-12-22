@@ -17,6 +17,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
     "nodemon": "^3.1.9",
+    "passport": "^0.7.0",
+    "passport-google-oidc": "^0.1.0",
     "zod": "^3.24.1"
   }
 }

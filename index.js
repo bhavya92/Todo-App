@@ -1,8 +1,3 @@
-/*
-    Two routes - user - signup,login, ( settings - Authorized) 
-                 todo - new , update, delete, done, deletefull -> Authorized
-                 Middlewares - rate limiter, authMiddleware
-*/ 
 require('dotenv').config()
 console.log(process.env.MONGO_URL);
 const express = require('express');
@@ -19,7 +14,7 @@ app.use('/todo',todoRouter);
 async function main() {
     try {
         await mongoose.connect(process.env.MONGO_URL);
-        app.listen(3000);
+        app.listen(parseInt(process.env.PORT));
         console.log('Listening on Port 3000');
     } catch(error) {
         console.log("Error connecting to DB " + error);

@@ -1,5 +1,3 @@
-// Two routes - user - signup,login, ( settings - Authorized) 
-// todo - new , update, delete, done, deletefull -> Authorized
 require('dotenv').config()
 
 const { Router } = require('express');
@@ -7,7 +5,8 @@ const { userModel } = require('../db')
 const { z } = require('zod')
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oidc');
 
 async function generateHash(password) {
     return new Promise((resolve, reject) => {
@@ -37,6 +36,7 @@ const logInSchema = z.object({
 
 const userRouter = Router();
 
+
 userRouter.post('/signup', async function(req,res) {
 
     const userData = req.body;
@@ -44,9 +44,6 @@ userRouter.post('/signup', async function(req,res) {
     if(result.success) {
         try{
             const generatedHash = await generateHash(result.data.password);
-            console.log('Zod success');
-            console.log("PRINTING generatedHash");
-            console.log(generatedHash);
             try {
                 await userModel.create({
                     email: result.data.email,
@@ -54,7 +51,6 @@ userRouter.post('/signup', async function(req,res) {
                     firstName: result.data.firstName,
                     lastName: result.data.lastName
                 });
-                console.log("User created successfully:");
                 res.json({
                     message: "Signup succeeded"
                 })
@@ -65,28 +61,22 @@ userRouter.post('/signup', async function(req,res) {
             console.error("Error while generating hash:", error)
         }
     } else {
-        console.log(result.error);
-        console.log('Zod aint good bro');
         res.json({
             message:"Input Validation Failed"
         })
     }
 })
+userRouter.get('/signup/google',passport.authenticate('google'));
 
 userRouter.post('/login',async function(req,res) {
     const userData = req.body;
     let result = logInSchema.safeParse(userData);
     if(result.success) {
-        console.log("In if(result.success)" );
-        console.log(result.data.password)
         const user = await userModel.findOne({
             email: result.data.email,
         });
-
         if (user) {
             bcrypt.compare(result.data.password, user.password, function(err, result) {
-                console.log(user.password);
-                console.log(result);
                 if(result) {
                     const token = jwt.sign({
                         id: user._id,
@@ -95,9 +85,6 @@ userRouter.post('/login',async function(req,res) {
                     res.json({
                         token: token
                     })
-                    console.log('User Found')
-                    console.log('First : ' + user.firstName); 
-                    
                 } else {
                     res.status(403).json({
                         message: "Incorrect credentials"
@@ -110,8 +97,6 @@ userRouter.post('/login',async function(req,res) {
             })
         }        
     } else {
-        console.log(result.error);
-        console.log('Zod aint good bro');
         res.json({
             message:"Input Validation Failed"
         })

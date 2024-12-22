@@ -37,7 +37,6 @@ todoRouter.post('/new', async function(req,res) {
 
     const title = req.body.title;
     const userId = req.userId;
-    console.log(userId);
     let newTodo;
     try {
         newTodo = await todoModel.create({
@@ -45,7 +44,6 @@ todoRouter.post('/new', async function(req,res) {
             done: false,
             userId: userId
         });
-        console.log("Todo added");
         res.json({
             message: "Todo added",
             todoId : newTodo._id .toString()
@@ -54,7 +52,6 @@ todoRouter.post('/new', async function(req,res) {
         console.error("Error adding todo: ", error);
     }
     try{
-        console.log("Pushing todo id to todos TRY");
         await userModel.findOneAndUpdate(
             {
                 _id : userId
