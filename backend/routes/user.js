@@ -38,9 +38,10 @@ const userRouter = Router();
 
 
 userRouter.post('/signup', async function(req,res) {
-
+    console.log("signup end point hitted");
     const userData = req.body;
     let result = signUpSchema.safeParse(userData);
+    console.log("req : " + req.body.email);
     if(result.success) {
         try{
             const generatedHash = await generateHash(result.data.password);
@@ -51,7 +52,7 @@ userRouter.post('/signup', async function(req,res) {
                     firstName: result.data.firstName,
                     lastName: result.data.lastName
                 });
-                res.json({
+                res.status(200).json({
                     message: "Signup succeeded"
                 })
             } catch (error) {
@@ -61,12 +62,12 @@ userRouter.post('/signup', async function(req,res) {
             console.error("Error while generating hash:", error)
         }
     } else {
-        res.json({
+        res.status(400).json({
             message:"Input Validation Failed"
         })
     }
 })
-userRouter.get('/signup/google',passport.authenticate('google'));
+// userRouter.get('/signup/google',passport.authenticate('google'));
 
 userRouter.post('/login',async function(req,res) {
     const userData = req.body;

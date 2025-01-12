@@ -1,21 +1,106 @@
-export default function SignupPage({closeSignup}) {
+import { Button } from "../ui/button/button";
+import { signup } from "../../services/auth";
+import { Input } from "../ui/input/formInput";
+import { useReducer, useRef, useState } from "react";
 
+export default function SignupPage({closeSignup}) {
+    const [ errors, setErrors ] = useState({});
+
+    const validateForm = (formValues) => {
+    
+        const er = {}
+        if (!formValues[0].value.trim()) {
+            er.name = 'First and Last Name are required';
+        } else if (formValues[0].value.length < 2 ) {
+            er.name = 'At least 2 characters';
+        } else if(formValues[0].value.length > 20) {
+            er.name = 'Less than 20 characters'
+        }
+
+        if (!formValues[1].value.trim()) {
+            er.name = 'First and Last Name are required';
+        } else if (formValues[1].value.length < 2 ) {
+            er.name = 'At least 2 characters';
+        } else if(formValues[1].value.length > 20) {
+            er.name = 'Less than 20 characters'
+        }
+
+        if (!formValues[2].value.trim()) {
+            er.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formValues[2].value)) {
+            er.email = 'Email is invalid';
+        }
+
+        if (!formValues[3].value) {
+            er.password = 'Password is required';
+        } else if (formValues[3].value.length < 8) {
+            er.password = 'At least 8 characters';
+        }
+
+        if (formValues[3].value !== formValues[4].value) {
+            er.confirmPassword = 'Passwords do not match';
+        }
+
+        return er;
+
+    }
+
+     async function signupHandler(event){
+        event.preventDefault();
+        const newErrors = validateForm(event.target);
+        setErrors(newErrors);
+        console.log("In signupHandler");   
+        if (Object.keys(newErrors).length === 0) {
+            await signup(event.target);
+        } else {
+            console.log('Form submission failed due to validation errors.');
+        }
+    }
     return (
-        <div   className="relative bg-mercury-300 w-fit h-fit px-6 py-3 rounded z-50 m-8">
-            <div className="absolute top-1 right-1 w-fit h-fit cursor-pointer" onClick={closeSignup}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+        <div   className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50">
+            <div className="absolute top-2 right-2 w-fit h-fit cursor-pointer" onClick={closeSignup}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
             </div>
-            <form className="flex items-center flex-col mt-4">
-                <div className="flex flex-row  w-72">
-                    <input type="text" placeholder="Fisrt Name" className="basis-1/2 h-6 w-32 mr-1 text-sm rounded py-4 px-2 mt-2 focus:border focus:border-mercury-900 focus:outline-none focus:ring-0"/>
-                    <input type="text" placeholder="Last Name" className="basis-1/2 h-6 w-32 mt-2 ml-1 text-sm rounded py-4 px-2 focus:border focus:border-mercury-900 focus:outline-none focus:ring-0"/>    
+            <form className="flex flex-col mt-6" onSubmit={signupHandler}>
+                {errors.name && (
+                            <span className="text-red text-xs">
+                                {errors.name}
+                            </span>
+                )}
+                <div className="flex flex-row  w-96">
+                    <Input className="w-48 basis-1/2 mt-2" type="text"  placeholder="Fisrt Name" />   
+                    <Input type="text" placeholder="Last Name" className="w-48 basis-1/2 mt-2"/>
+               </div>
+
+                <div className="mt-4">
+                    {errors.email && (
+                            <span className="text-red text-xs">
+                                {errors.email}
+                            </span>
+                    )}
                 </div>
-                <input type="email" placeholder="Email" className="h-6 w-72 text-sm rounded py-4 px-2 mt-4 focus:border focus:border-mercury-900 focus:outline-none focus:ring-0"/>
-                <input type="password" placeholder="Password" className="h-6 w-72 mt-4 text-sm rounded py-4 px-2 focus:border focus:border-mercury-900 focus:outline-none focus:ring-0"/>
-                <input type="password" placeholder="Confirm Password" className="h-6 w-72 mt-4 text-sm rounded py-4 px-2 focus:border focus:border-mercury-900 focus:outline-none focus:ring-0"/>
-                <button className="text-mercury-50 bg-mercury-800 w-72 p-2 mt-8 rounded hover:outline hover:outline-2 hover:outline-mercury-900">Sign Up</button>
+                <Input type="email" placeholder="Email" className="w-96" />
+
+                <div className="mt-4">
+                    {errors.password && (
+                            <span className="text-red text-xs">
+                                {errors.password}
+                            </span>
+                    )}
+                </div>
+                <Input type="password" placeholder="Password" className="w-96" />
+
+                <div className="mt-4">
+                    {errors.confirmPassword && (
+                            <span className="text-red text-xs">
+                                {errors.confirmPassword}
+                            </span>
+                    )}
+                </div>
+                <Input type="password" placeholder="Confirm Password" className="w-96" />
+                <Button className = "w-96 mt-8" type="submit">Sign Up</Button>
             </form>
         </div>
     )
