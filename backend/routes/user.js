@@ -82,8 +82,8 @@ userRouter.post('/login',async function(req,res) {
                     const token = jwt.sign({
                         id: user._id,
                     }, process.env.JWT_SECRET);
-            
-                    res.json({
+                    console.log("Token generated " + token);
+                    res.status(200).json({
                         token: token
                     })
                 } else {

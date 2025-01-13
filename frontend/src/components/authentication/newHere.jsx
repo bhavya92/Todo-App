@@ -1,7 +1,7 @@
 import { Button } from "../ui/button/button";
 import { signup } from "../../services/auth";
 import { Input } from "../ui/input/formInput";
-import { useReducer, useRef, useState } from "react";
+import {  useState } from "react";
 
 export default function SignupPage({closeSignup}) {
     const [ errors, setErrors ] = useState({});
@@ -53,11 +53,11 @@ export default function SignupPage({closeSignup}) {
         if (Object.keys(newErrors).length === 0) {
             await signup(event.target);
         } else {
-            console.log('Form submission failed due to validation errors.');
+            console.log('Signup failed due to validation errors.');
         }
     }
     return (
-        <div   className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50">
+        <div   className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50 shadow-xl shadow-stone-700">
             <div className="absolute top-2 right-2 w-fit h-fit cursor-pointer" onClick={closeSignup}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
