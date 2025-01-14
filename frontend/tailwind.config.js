@@ -24,7 +24,7 @@ export default {
     'red' : "#FF0000",
    },
     extend: {
-     
+      
     //    keyframes: {
     //     typing: {
     //       "%0": {

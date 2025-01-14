@@ -6,32 +6,32 @@ export const login = async (formValues) => {
             headers : {
                 'Content-Type' : 'application/json; charset=UTF-8'
             },
+            credentials : 'include',
             body : JSON.stringify({
                 email : formValues[0].value,
                 password : formValues[1].value
             })
         });
         const data = await response.json();
-        if(!response.ok) {
-            throw new Error(`Response status: ${response.status}`); 
-        } else {
-            console.log(data.token);
-        }
+        console.log(data.token);
+        return data;
+        
     } catch(err) {
-        console.error(err.message)
+        console.log("In catch of login")
+        console.log(err.message);
     }
- 
+    return {};
 }
 
 export const signup = async (formValues) => {
    const url = "http://localhost:3000/user/signup";
-   console.log("Email " + formValues[2].value);
    try {
     const response = await fetch(url, {
         method : "POST",
         headers: {
             'Content-Type': 'application/json; charset=UTF-8',
         },
+        credentials : 'include',
         body : JSON.stringify({
             email : formValues[2].value,
             password : formValues[3].value,
@@ -39,13 +39,25 @@ export const signup = async (formValues) => {
             lastName : formValues[1].value,
         })
     });
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
+    
     const json = await response.json();
-    console.log(json);
+    return json;
+
   } catch (error) {
     console.error(error.message);
   }
 }
+
+export const logout = async () => {
+    const url = "http://localhost:3000/user/logout";
+    try {
+        const response = await fetch(url, {
+          method:'POST',
+          credentials : 'include',
+        });
+        const data = await response.json();
+        return data;
+      } catch(error) {
+          console.error('Error during token validation:', error);
+      }
+    };

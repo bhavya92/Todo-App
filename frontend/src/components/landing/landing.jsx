@@ -9,6 +9,8 @@ export default function LandingPage() {
 
     const pointerEvent = (showLogin || showSignup) ? "pointer-events-none" : "pointer-events-auto"
     const blur =  (showLogin || showSignup) ? "blur-sm" : "blur-none"
+    
+    
     return <div className="relative w-screen h-screen flex justify-center items-center">
         {showLogin && <LoginPage closeLogin={() => setShowLogin(false)}/>}
         {showSignup && <SignupPage closeSignup={() => setShowSignup(false)}/>}     

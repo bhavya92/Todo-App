@@ -1,11 +1,12 @@
 import { Button } from "../ui/button/button";
 import { signup } from "../../services/auth";
 import { Input } from "../ui/input/formInput";
-import {  useState } from "react";
+import {  useContext, useState } from "react";
+import { AuthContext } from "../../App";
 
 export default function SignupPage({closeSignup}) {
     const [ errors, setErrors ] = useState({});
-
+    const { setIsUser } = useContext(AuthContext)
     const validateForm = (formValues) => {
     
         const er = {}
@@ -44,34 +45,44 @@ export default function SignupPage({closeSignup}) {
         return er;
 
     }
-
+    // TODO :  Add try catch logic
      async function signupHandler(event){
         event.preventDefault();
         const newErrors = validateForm(event.target);
         setErrors(newErrors);
         console.log("In signupHandler");   
         if (Object.keys(newErrors).length === 0) {
-            await signup(event.target);
+
+            const response = await signup(event.target);
+            
+            if(response.error === 'Conflict') {
+                const newErrors = {signupError : "User Already Exists"}
+                setErrors(newErrors);
+            }
+            if(response.status==='200') {
+                setIsUser(true);
+            }
         } else {
             console.log('Signup failed due to validation errors.');
         }
     }
     return (
-        <div   className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50 shadow-xl shadow-stone-700">
+        <div  className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50 shadow-xl shadow-stone-700">
             <div className="absolute top-2 right-2 w-fit h-fit cursor-pointer" onClick={closeSignup}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
             </div>
             <form className="flex flex-col mt-6" onSubmit={signupHandler}>
-                {errors.name && (
+                <div >{errors.name && (
                             <span className="text-red text-xs">
                                 {errors.name}
                             </span>
                 )}
+                </div>
                 <div className="flex flex-row  w-96">
-                    <Input className="w-48 basis-1/2 mt-2" type="text"  placeholder="Fisrt Name" />   
-                    <Input type="text" placeholder="Last Name" className="w-48 basis-1/2 mt-2"/>
+                    <Input className="w-48 basis-1/2 mt-1" type="text"  placeholder="Fisrt Name" />   
+                    <Input type="text" placeholder="Last Name" className="w-48 basis-1/2 mt-1"/>
                </div>
 
                 <div className="mt-4">
@@ -100,8 +111,19 @@ export default function SignupPage({closeSignup}) {
                     )}
                 </div>
                 <Input type="password" placeholder="Confirm Password" className="w-96" />
-                <Button className = "w-96 mt-8" type="submit">Sign Up</Button>
+                
+                <Button className = "w-96 mt-4" type="submit">Sign Up</Button>
             </form>
+            <div className="flex justify-center items-center">
+                <div className="mt-4">
+                        {errors.signupError && (
+                                <span className="text-red text-s">
+                                    {errors.signupError}
+                                </span>
+                        )}
+                </div>
+            </div>
+           
         </div>
     )
 

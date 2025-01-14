@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { login } from "../../services/auth";
 import { Button } from "../ui/button/button";
 import { Input } from "../ui/input/formInput";
-
+import { AuthContext } from "../../App";
 export default function LoginPage({closeLogin}) {
-
+    const { setIsUser } = useContext(AuthContext);
     const [ errors, setErrors ] = useState({});
 
     const er = {}
+    
+    function redirectToHome() {
+        console.log("Inside redirecttohome")
+        setIsUser(true);
+    }
+    
     const validateForm = (formValues) => {
         console.log("Email is " + formValues[0].value);
         if (!formValues[0].value.trim()) {
@@ -23,15 +29,29 @@ export default function LoginPage({closeLogin}) {
         }
         return er;
     }
-
+    // TODO : Add try catch logic
     async function loginHandler(event){
         event.preventDefault();
         const newErrors = validateForm(event.target);
         setErrors(newErrors);
-        if(Object.keys(newErrors).length === 0)
-            await login(event.target);
-        else
+        if(Object.keys(newErrors).length === 0){
+            const response = await login(event.target);
+            if(response.error === 'Unauthorized') {
+                const newError = {
+                    loginError : "Email or Password is Incorrect"
+                }
+                setErrors(newError);
+            }
+             //Navigate to home with token 
+            if(response.message === 'Login Success'){
+                //local storage isUSer true
+                console.log("aboce redirecttohome")
+                redirectToHome();
+            }
+        }
+        else {
             console.log('Login failed due to validation errors.');
+        }
     }
     return (
         <div  className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50 m-8 shadow-xl shadow-stone-700">
@@ -59,6 +79,15 @@ export default function LoginPage({closeLogin}) {
                 </div>
                 <Input type="password" placeholder="Password" className="w-72"/>
                 <Button className = "w-72 mt-8" type="submit">Login</Button>
+                <div className="flex justify-center items-center">
+                <div className="mt-4">
+                        {errors.loginError && (
+                                <span className="text-red text-s">
+                                    {errors.loginError}
+                                </span>
+                        )}
+                </div>
+            </div>
             </form>
         </div>
     )
