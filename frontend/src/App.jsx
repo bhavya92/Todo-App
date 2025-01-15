@@ -10,6 +10,7 @@ import PageNotFound from './components/authentication/pageNotFound'
 
 function App() {
   const [ isUser , setIsUser ] = useState(null);
+  const [ loading, setLoading ] = useState(true);
   console.log("isAuth is " + isUser);
   
   useEffect(()=>{
@@ -21,6 +22,7 @@ function App() {
     /*
       isUser -> True -> /home  
     */
+      
     const checkAuthenticated = async () => {
       console.log("In useEffect");
       const url = "http://localhost:3000/user/validate-token";
@@ -34,6 +36,7 @@ function App() {
         if(data.error === "none") { 
           console.log("data is valid");
           setIsUser(true);
+          setLoading(false);
         } else {
           console.log("data is Invalid");
           setIsUser(false);
@@ -45,7 +48,13 @@ function App() {
     };
     checkAuthenticated();
   },[]);
-
+  if(loading) {
+    return <>
+      <div>
+        Loading...
+      </div>
+    </>
+  }
   return (
     <>
     <BrowserRouter>
