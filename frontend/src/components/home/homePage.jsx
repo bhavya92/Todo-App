@@ -1,6 +1,7 @@
 import { logout } from "../../services/auth"
 import { useContext, useState } from "react";
-import { AuthContext } from "../../App";
+import { AuthContext } from "../../context/authcontext";
+
 import SideBar from "./Sidebar";
 import { SidebarContext } from "../../context/sidebarcontext";
 import HomeMain from "./homeMain";

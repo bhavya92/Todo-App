@@ -1,12 +1,11 @@
-import {  useEffect, useState, createContext } from 'react'
+import {  useEffect, useState } from 'react'
 import './App.css'
 import UserHome from './components/home/homePage'
 import LandingPage from './components/landing/landing'
-
+import { AuthContext } from './context/authcontext'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import PageNotFound from './components/authentication/pageNotFound'
 
-export const AuthContext = createContext();
 
 
 function App() {

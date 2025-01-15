@@ -2,7 +2,7 @@ import { Button } from "../ui/button/button";
 import { signup } from "../../services/auth";
 import { Input } from "../ui/input/formInput";
 import {  useContext, useState } from "react";
-import { AuthContext } from "../../App";
+import { AuthContext } from "../../context/authcontext";
 
 export default function SignupPage({closeSignup}) {
     const [ errors, setErrors ] = useState({});

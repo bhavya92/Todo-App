@@ -2,7 +2,9 @@ import { useContext, useState } from "react";
 import { login } from "../../services/auth";
 import { Button } from "../ui/button/button";
 import { Input } from "../ui/input/formInput";
-import { AuthContext } from "../../App";
+import { AuthContext } from "../../context/authcontext";
+
+
 export default function LoginPage({closeLogin}) {
     const { setIsUser } = useContext(AuthContext);
     const [ errors, setErrors ] = useState({});
