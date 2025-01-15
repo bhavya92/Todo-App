@@ -1,9 +1,16 @@
 import { logout } from "../../services/auth"
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../App";
+import SideBar from "./Sidebar";
+import { SidebarContext } from "../../context/sidebarcontext";
+import HomeMain from "./homeMain";
 
 export default function UserHome(){
     const { setIsUser } = useContext(AuthContext);
+    const [ sidebarVisibility, setSidebarVisibility  ] = useState("hidden");
+    const [toggleButtonVisibility, setToggleButtonVisibilty] = useState("block");
+
+    
 
     async function logOutHandler () {
         const response = await logout();
@@ -15,8 +22,18 @@ export default function UserHome(){
     }
 
     return<>
-
-    <button onClick={logOutHandler}>Log out</button>
-        <h1>Welcome</h1>
+    <SidebarContext.Provider value={{
+        sidebarVisibility:sidebarVisibility,
+        setSidebarVisibility:setSidebarVisibility,
+        toggleButtonVisibility:toggleButtonVisibility,
+        setToggleButtonVisibilty:setToggleButtonVisibilty
+      }}>
+        <div className="flex h-screen">
+            <button className="absolute top-4 right-4 w-fit h-fit bg-stone-100" onClick={logOutHandler}>Log out</button>
+            <SideBar/>
+            <HomeMain/>
+        </div>
+      </SidebarContext.Provider>
+   
     </>
 }
