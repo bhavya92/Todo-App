@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Header from "./header"
 import LoginPage from "../authentication/login";
 import SignupPage from "../authentication/newHere";
@@ -18,7 +18,7 @@ export default function LandingPage() {
             <Header onLoginClick={()=>setShowLogin(true)}  
                     onSignupClick={() => {setShowSignup(true) }}/>
             <div className="bg-stone-50 flex justify-center">
-                    <span className="p-2 h-fit w-fit mt-60 text-6xl">A simple Website to <b>Organize</b> Stuff.</span>
+                    <span className="p-2 h-fit w-fit mt-60 text-center text-4xl md:text-6xl font-light">A simple Website to <b>Organize</b> Stuff.</span>
             </div>
         </div>
     </div>

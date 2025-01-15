@@ -80,9 +80,9 @@ export default function SignupPage({closeSignup}) {
                             </span>
                 )}
                 </div>
-                <div className="flex flex-row  w-96">
-                    <Input className="w-48 basis-1/2 mt-1" type="text"  placeholder="Fisrt Name" />   
-                    <Input type="text" placeholder="Last Name" className="w-48 basis-1/2 mt-1"/>
+                <div className="flex flex-row w-72 lm:w-96">
+                    <Input className="w-32 lm:w-48 basis-1/2 mt-1" type="text"  placeholder="Fisrt Name" />   
+                    <Input type="text" placeholder="Last Name" className="w-32 lm:w-48 basis-1/2 mt-1"/>
                </div>
 
                 <div className="mt-4">
@@ -92,7 +92,7 @@ export default function SignupPage({closeSignup}) {
                             </span>
                     )}
                 </div>
-                <Input type="email" placeholder="Email" className="w-96" />
+                <Input type="email" placeholder="Email" className="w-72 lm:w-96" />
 
                 <div className="mt-4">
                     {errors.password && (
@@ -101,7 +101,7 @@ export default function SignupPage({closeSignup}) {
                             </span>
                     )}
                 </div>
-                <Input type="password" placeholder="Password" className="w-96" />
+                <Input type="password" placeholder="Password" className="w-72 lm:w-96" />
 
                 <div className="mt-4">
                     {errors.confirmPassword && (
@@ -110,9 +110,9 @@ export default function SignupPage({closeSignup}) {
                             </span>
                     )}
                 </div>
-                <Input type="password" placeholder="Confirm Password" className="w-96" />
+                <Input type="password" placeholder="Confirm Password" className="w-72 lm:w-96" />
                 
-                <Button className = "w-96 mt-4" type="submit">Sign Up</Button>
+                <Button className = "w-72 lm:w-96 mt-4" type="submit">Sign Up</Button>
             </form>
             <div className="flex justify-center items-center">
                 <div className="mt-4">

@@ -15,6 +15,7 @@ export default function UserHome(){
     }
 
     return<>
+
     <button onClick={logOutHandler}>Log out</button>
         <h1>Welcome</h1>
     </>

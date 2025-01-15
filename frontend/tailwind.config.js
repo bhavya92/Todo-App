@@ -5,6 +5,29 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+      screens: {
+        'ms':'320px',
+        // => @media (min-width: 320x) { ... }
+
+        'mm':'375px',
+        // => @media (min-width: 375x) { ... }
+
+        'lm': '425px',
+        // => @media (min-width: 425x) { ... }
+  
+        'md': '768px',
+        // => @media (min-width: 768px) { ... }
+  
+        'lg': '1024px',
+        // => @media (min-width: 1024px) { ... }
+  
+        'xl': '1280px',
+        // => @media (min-width: 1280px) { ... }
+  
+        '2xl': '1536px',
+        // => @media (min-width: 1536px) { ... }
+      },
+    
     colors: {
      'stone': {
         '50': '#fafaf9',
@@ -24,7 +47,7 @@ export default {
     'red' : "#FF0000",
    },
     extend: {
-      
+
     //    keyframes: {
     //     typing: {
     //       "%0": {
