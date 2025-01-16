@@ -5,6 +5,7 @@ import LandingPage from './components/landing/landing'
 import { AuthContext } from './context/authcontext'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import PageNotFound from './components/authentication/pageNotFound'
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
@@ -50,8 +51,8 @@ function App() {
   },[]);
   if(loading) {
     return <>
-      <div>
-        Loading...
+      <div className='flex justify-center items-center'>
+          <CircularProgress sx={{ color: '#292524'}} size={50}/>
       </div>
     </>
   }
