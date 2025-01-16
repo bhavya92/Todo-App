@@ -1,4 +1,5 @@
-const mongoose =  require('mongoose')
+const mongoose =  require('mongoose');
+const { boolean } = require('zod');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -26,8 +27,10 @@ const todoListSchema = new Schema({
 
 const todoSchema = new Schema({
     title:String,
-    done:Boolean,
-    userId:ObjectId
+    dueDate:String,
+    starred:Boolean,
+    daily:Boolean,
+    todoList:ObjectId
 });
 
 const userModel = mongoose.model('User',userSchema);
