@@ -1,7 +1,3 @@
-/*
-userSchema -> _id, email, password, firstName, lastName
-todoSchema -> _id,title,done(boolean),userId 
-*/
 const mongoose =  require('mongoose')
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
@@ -14,8 +10,19 @@ const userSchema = new Schema({
     password : String,
     firstName : String,
     lastName : String,
-    todos : [ObjectId]
+    topics : [ObjectId],
 });
+
+const topicSchema =  new Schema({
+    title:String,
+    userId:ObjectId,
+    todoList :[ObjectId]
+});
+
+const todoListSchema = new Schema({
+    topic:[ObjectId],
+    todos:[ObjectId]
+})
 
 const todoSchema = new Schema({
     title:String,
@@ -25,9 +32,13 @@ const todoSchema = new Schema({
 
 const userModel = mongoose.model('User',userSchema);
 const todoModel = mongoose.model('Todo',todoSchema);
+const topicModel = mongoose.model('Topic',topicSchema);
+const todoListModel = mongoose.model('TodoList',todoListSchema);
 
 module.exports = {
     userModel,
-    todoModel
+    todoModel,
+    topicModel,
+    todoListModel
 }
 
