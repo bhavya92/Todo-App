@@ -1,5 +1,4 @@
 const mongoose =  require('mongoose');
-const { boolean } = require('zod');
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -11,18 +10,22 @@ const userSchema = new Schema({
     password : String,
     firstName : String,
     lastName : String,
-    topics : [ObjectId],
 });
 
 const topicSchema =  new Schema({
     title:String,
-    userId:ObjectId,
-    todoList :[ObjectId]
+    user:{
+        id:ObjectId,
+        name:String,
+    }
 });
 
 const todoListSchema = new Schema({
-    topic:[ObjectId],
-    todos:[ObjectId]
+    title:String,
+    topic:{
+        id:ObjectId,
+        title:String
+    }
 })
 
 const todoSchema = new Schema({
@@ -30,8 +33,17 @@ const todoSchema = new Schema({
     dueDate:String,
     starred:Boolean,
     daily:Boolean,
-    todoList:ObjectId
+    todoList:{
+        id:ObjectId,
+        title:String,
+    },
+    user:{
+        id:ObjectId,
+        name:String,
+    }
 });
+
+
 
 const userModel = mongoose.model('User',userSchema);
 const todoModel = mongoose.model('Todo',todoSchema);
