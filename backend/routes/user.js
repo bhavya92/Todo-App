@@ -85,7 +85,7 @@ userRouter.post('/signup', async function(req,res) {
                 id: newUser._id,
                 }, process.env.JWT_SECRET);
             console.log("Token generated " + typeof token);
-
+            //TODO : Create personal topic of new user created     
             res.status(200).cookie('token',token, {
                 httpOnly:true,
                 secure : true,
