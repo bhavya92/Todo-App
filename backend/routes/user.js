@@ -45,70 +45,51 @@ userRouter.post('/signup', async function(req,res) {
     let generatedHash = "";
     let result = signUpSchema.safeParse(userData);
     console.log("req : " + req.body.email);
-    if(result.success) {
-        //Checking if user already exists 
-        try {
-            const user = await userModel.find({email : result.data.email});
-            if(user.length !== 0) {
-                return res.status(409).json({
-                    error : "Conflict",
-                    message : "Email already exists"
-                })
-            } else {
-                console.log("User exists " + user);
-            }
-        } catch(error) {
-            return res.status(500).json({
-                error : "Internal Server Error",
-                message : "Something went wrong. Please try again later."
-            })
-        }
 
-        try{
-            generatedHash = await generateHash(result.data.password);
-        } catch (error){
-            console.error("Error while generating hash:", error);
-            return res.status(500).json({
-                message : "Something went wrong. Please try again later."
-            })
-        }
-
-        try {
-            const newUser = await userModel.create({
-                email: result.data.email,
-                password: generatedHash,
-                firstName: result.data.firstName,
-                lastName: result.data.lastName
-            });
-            //generate token and send 
-            const token = jwt.sign({
-                id: newUser._id,
-                }, process.env.JWT_SECRET);
-            console.log("Token generated " + typeof token);
-            //TODO : Create personal topic of new user created     
-            res.status(200).cookie('token',token, {
-                httpOnly:true,
-                secure : true,
-                sameSite:'None',
-                expires: new Date(Date.now() + 7 * 24 * 3600000) 
-            }).json({
-                status:'200',
-                error:"none",
-                message:"Signup Success",
-            })
-        } catch (error) {
-            console.error("Error creating user:", error);
-            return res.status(500).json({
-                error : "Internal Server Error",
-                message : "Something went wrong. Please try again later."
-            })
-        }
-
-    } else {
-        res.status(400).json({
-            error:"Bad Request",
-            message:"Input Validation Failed"
+    if(!(result.success)) {
+        return res.status(500).json({
+            error : "Internal Server Error",
+            message : "Something went wrong. Please try again later."
         })
+    }
+   
+    //Checking if user already exists 
+    try {
+        const user = await userModel.find({email : result.data.email});
+        if(user.length !== 0) {
+            return res.status(409).json({
+                error : "Conflict",
+                message : "Email already exists"
+            })
+        } 
+        generatedHash = await generateHash(result.data.password);
+
+        const newUser = await userModel.create({
+            email: result.data.email,
+            password: generatedHash,
+            firstName: result.data.firstName,
+            lastName: result.data.lastName
+        });
+        //generate token and send 
+        const token = jwt.sign({
+            id: newUser._id,
+            }, process.env.JWT_SECRET);
+        console.log("Token generated " + typeof token);
+        //TODO : Create personal topic of new user created     
+        res.status(200).cookie('token',token, {
+            httpOnly:true,
+            secure : true,
+            sameSite:'None',
+            expires: new Date(Date.now() + 7 * 24 * 3600000) 
+        }).json({
+            status:'200',
+            error:"none",
+            message:"Signup Success",
+        })
+
+    } catch(err) {
+        console.log(err);
+        
     }
 })
 // userRouter.get('/signup/google',passport.authenticate('google'));
@@ -123,46 +104,48 @@ userRouter.post('/login',async function(req,res) {
     console.log("login hitted");
     const userData = req.body;
     let result = logInSchema.safeParse(userData);
-    if(result.success) {
-        const user = await userModel.findOne({
-            email: result.data.email,
-        });
-        if (user) {
-            bcrypt.compare(result.data.password, user.password, function(err, result) {
-                if(result) {
-                    const token = jwt.sign({
-                        id: user._id,
-                    }, process.env.JWT_SECRET);
-                    console.log("Token generated " + token);
-                    res.status(200).cookie('token',token, {
-                        httpOnly:true,
-                        secure : true,
-                        sameSite:'None',
-                        expires: new Date(Date.now() + 7 * 24 * 3600000) 
-                    }).json({
-                        status:'200',
-                        message:"Login Success",
-                    })
-                } else {
-                    res.status(401).json({
-                        status : '401',
-                        error : "Unauthorized",
-                        message: "Incorrect credentials"
-                    })                
-                }
-            });
-        } else {
-            res.status(403).json({
-                status:'403',
-                error:"Forbidden",
-                message: "Incorrect credentials"
-            })
-        }        
-    } else {
-        res.json({
-            message:"Input Validation Failed"
+
+    if(!(result.success)) {
+        return res.status(400).json({
+            'error':'Bad Request'
         })
     }
+
+    const user = await userModel.findOne({
+        email: result.data.email,
+    });
+    if (user) {
+        bcrypt.compare(result.data.password, user.password, function(err, result) {
+            if(result) {
+                const token = jwt.sign({
+                    id: user._id,
+                }, process.env.JWT_SECRET);
+                console.log("Token generated " + token);
+                res.status(200).cookie('token',token, {
+                    httpOnly:true,
+                    secure : true,
+                    sameSite:'None',
+                    expires: new Date(Date.now() + 7 * 24 * 3600000) 
+                }).json({
+                    status:'200',
+                    message:"Login Success",
+                })
+            } else {
+                res.status(401).json({
+                    status : '401',
+                    error : "Unauthorized",
+                    message: "Incorrect credentials"
+                })                
+            }
+        });
+    } else {
+        res.status(403).json({
+            status:'403',
+            error:"Forbidden",
+            message: "Incorrect credentials"
+        })
+    }        
+
 })
 
 userRouter.post("/logout", authMiddleware, function(req,res) {

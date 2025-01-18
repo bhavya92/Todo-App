@@ -1,21 +1,22 @@
-const { topicModel } = require('../db')
+const { topicModel, todoListModel, todoModel } = require('../db')
 const { userModel } = require('../db')
 const { authMiddleware } = require('../middleware/authMiddleware')
-const { Router } = require('express');
+const { Router, response } = require('express');
 
 const topicRouter = Router();
 topicRouter.use(authMiddleware);
   
-// GET /all - to fetch all topic name
-// GET /id
+// GET / - to fetch all topic name
+// 
 // POSt /new - create new topic 
 // DELETE /delete - delete topic 
 // UPDATE /update - topic name
 
-// GET - /list - fetch all lists of that topic
-// POST /list/newList - added new List 
+
+// GET - /:topicId/all - fetch all lists of that topic
+// POST /:topicId/new - added new List 
 // DELETE /list/delete - DELETE a List
-// POST /list/update - Update name
+// POST /list/update - Update list name
 
 //Function to return all topic names 
 topicRouter.get('/', async function(req, res) {
@@ -28,12 +29,14 @@ topicRouter.get('/', async function(req, res) {
            'user.id':userId
         })
         console.log(topicsFound)
-        res.status(200).json({
+        return res.status(200).json({
             topics:topicsFound
         })
     } catch(err) {
         console.log("Error : " + err);
-        res.status(404);
+        return res.status(500).json({
+            'error':'Server Error'
+        });
     }
 })
 
@@ -46,22 +49,12 @@ topicRouter.post('/new',async function(req,res) {
     let userFound, newTopic;
     try{
         userFound = await userModel.findById(userID);
-    } catch(err) {
-        console.log("Error : " + err);
-        return res.status(500).json({
-            "error":err
-        });
-    }
-
-    if(userFound === null) {
-        console.log("User not found");
-        return res.status(404).json({
-            "error":"User not found"
-        })
-    }
-
-    //creating topic
-    try{    
+        if(userFound === null) {
+            console.log("User not found");
+            return res.status(404).json({
+                "error":"User not found"
+            })
+        }
         newTopic = await topicModel.create({
             title:topicTitle,
             user:{
@@ -75,7 +68,7 @@ topicRouter.post('/new',async function(req,res) {
     } catch(err) {
         console.log("Error : " + err);
         return res.status(500).json({
-            "error":err
+            "error":'Server Error'
         });
     }
 
@@ -84,18 +77,49 @@ topicRouter.post('/new',async function(req,res) {
 //Function to delete a topic
 topicRouter.delete('/delete/:id', async function(req,res) {
     const { id } = req.params;
-    //find topic and delete
+    let listsFound;
+    //find all the lists that belong to that topic -> delete them
+    //find all the todos of those lists -> delete them
+    //Then delete the topic
+
+    //searching for lists
     try {
+        listsFound = await todoListModel.find(
+            {
+                'topic.id':id
+            }
+        );
+
+        const todoListIds = listsFound.map(listsFound => listsFound.topic.id)
+
+        if(todoListIds.length>0) {
+            //deleting all the todos of those lists       
+            await todoModel.deleteMany({
+                'todoList.id':{ $in:todoListIds}
+            })
+        
+            //deleting the lists
+            await todoListModel.deleteMany({
+                'topic.id':id
+            });
+    
+       }
+    
+        //find topic and delete
         await topicModel.findByIdAndDelete({_id:id})
+    
         return res.status(200).json({
-            message:"Topic Deleted"
+            'message':"Topic Deleted"
         })
+
     } catch(err) {
-        console.log("Error  " + err);
-        return res.status(500).json({
-            "error" : "Failed to delete"
-        })
+        console.log(err);
+        return res.json(500).json({
+            'error':'Server Error'
+        });
     }
+
+
 })
 
 //Function to update topic name 
@@ -112,12 +136,12 @@ topicRouter.put('/update/:id', async function(req,res) {
             }
         )
         res.status(200).json({
-            message:"Topic Name Updated"
+            'message':"Topic Name Updated"
         })
     } catch(err) {
         console.log("Error : " + err);
         return res.status(500).json({
-            "error":"Failed to update name "
+            "error":"Server Error"
         })
     }
 })

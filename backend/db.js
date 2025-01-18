@@ -33,6 +33,7 @@ const todoSchema = new Schema({
     dueDate:String,
     starred:Boolean,
     daily:Boolean,
+    done:Boolean,
     todoList:{
         id:ObjectId,
         title:String,

@@ -2,161 +2,119 @@
 const { Router } = require('express');
 const todoRouter = Router();
 const { authMiddleware } = require('../middleware/authMiddleware')
-const { todoModel } = require('../db')
+const { todoModel, topicModel } = require('../db')
 const { userModel } = require('../db');
 const e = require('express');
 
 todoRouter.use(authMiddleware)
 
-todoRouter.get('/',async function (req,res) {
-
-    const userId = req.userId;
-    let userFound;
-    let todoTitleArray = [];
-    try{
-        userFound = await userModel.findOne({
-            _id:userId
-        })
-        let todoArray = userFound.todos;
-        for(let i=0;i<todoArray.length;i++) {
-            let todoFound = await todoModel.findOne({
-                _id : todoArray[i]
-            })
-            todoTitleArray.push(todoFound.title);
-        }
-        res.json({
-            todos:todoTitleArray
-        })
-
-    } catch(err) {
-        console.log("Error : " + err);
-    }
-})
-
-todoRouter.post('/new', async function(req,res) {
-
-    const title = req.body.title;
-    const userId = req.userId;
-    let newTodo;
+//Getting all todos 
+todoRouter.get('/:listId/all',async function (req,res) {
+    const { listId } = req.params;
+    let todosFound;
     try {
-        newTodo = await todoModel.create({
-            title: title,
-            done: false,
-            userId: userId
-        });
-        res.json({
-            message: "Todo added",
-            todoId : newTodo._id .toString()
+        todosFound = await todoModel.find({
+            'todoList.id':listId
         })
-    } catch (error) {
-        console.error("Error adding todo: ", error);
-    }
-    try{
-        await userModel.findOneAndUpdate(
-            {
-                _id : userId
-            },
-            {
-                $push: { todos: newTodo._id } 
-            }
-        )
+        console.log(todosFound);
+        return res.status(200).json({
+            todos:todosFound
+        })
     } catch(err) {
-        console.log("Error " + err);
+        console.log(err);
+        return res.status(500).json({
+            'error':'Server Error'
+        })
     }
+    
 })
 
-todoRouter.put('/update',async function(req,res) {
+todoRouter.post('/:listId/new', async function(req,res) {
+    let userFound,listFound;
+    const { listId } = req.params;
+   
+    try{
+        userFound = await userModel.findById(req.userId);
 
-    const { title, todoId } = req.body;
+        if(userFound === null) {
+            return res.status(404).json({
+                'error':'User not found'
+            })
+        }
+
+        listFound = await topicModel.findById(listId);
+        
+        if(listFound === null) {
+            return res.status(404).json({
+                'error':'List not found'
+            })
+        }
+
+        await todoModel.create({
+            title:req.body.title,
+            dueDate:req.body.dueDate,
+            starred:req.body.starred,
+            daily:req.body.daily,
+            done:false,
+            todoList:{
+                id:listId,
+                title:listFound.title
+            },
+            user:{
+                id:req.userId,
+                name:userFound.firstName
+            }        
+        })
+        res.status(200).json({
+            'message':'todo addded'
+        })
+
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            'error':'Server Error'
+        })
+    }
+
+})
+
+todoRouter.put('/update/:id',async function(req,res) {
+    const { id } = req.params;
     try{
         await todoModel.findByIdAndUpdate({
-            _id: todoId
+            _id: id
         },{
-            title : title
+            title:req.body.title,
+            dueDate:req.body.dueDate,
+            starred:req.body.starred,
+            daily:req.body.daily,
+            done:req.body.done
         })
-        res.json({
+        res.status(200).json({
             message:"Todo Updated"
         })
     } catch(err) {
         console.log("Error " + err);
-        res.json({
-            message:"Error Occured"
+        res.status(500).json({
+            'error':"Server Error"
         })
     }
 })
 
-todoRouter.post('/done', async function(req ,res) {
+todoRouter.delete('/delete/:id', async function(req, res) {
 
-    const todoId = req.body.todoId;
+    const { id } = req.params;
     try{
-        await todoModel.findOneAndUpdate({
-            _id : todoId
-        },{
-            done:true
-        })
-        res.json({
-            message:"Marked as done"
-        })
-    } catch(err) {
-        console.log("Error "  +err);
-    }
-    
-
-})
-
-todoRouter.delete('/delete', async function(req, res) {
-
-    const todoId = req.body.todoId;
-    const userId = req.userId;
-    try{
-        await todoModel.deleteOne({
-            _id : todoId
+        await todoModel.findByIdAndDelete(id)
+        return res.status(200).json({
+            'message':'todo deleted'
         })
     } catch(err) {
         console.log("Error + " + err);
-    }
-
-    try {
-        await userModel.findOneAndUpdate({
-            _id : userId
-        },{
-            $pull: { todos: todoId }
+        return res.status(500).json({
+            'error':'Server Error'
         })
-        res.json({
-            message : "Todo Deleted"
-        })
-    } catch(err) {
-        console.log("Error : + " + err);
     }
-})
-
-todoRouter.delete('/deleteAll', async function(req, res) {
-
-    const userId = req.userId;
-    const { todos } = req.body;
-    console.log(todos);
-    for(let i = 0; i<todos.length;i++) {
-        try{
-            await todoModel.deleteOne({
-                _id : todos[i]
-            })
-        } catch(err) {
-            console.log(err);
-        }
-    }
-    try {
-        await userModel.findOneAndUpdate({
-            _id : userId
-        },{
-            $set: { todos: [] }
-        })
-        res.json({
-            message : "All Todos Deleted"
-        })
-    } catch(err) {
-        console.log("Error : + " + err);
-    }
-
 })
 
 
