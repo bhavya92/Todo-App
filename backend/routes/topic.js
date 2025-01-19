@@ -5,18 +5,6 @@ const { Router, response } = require('express');
 
 const topicRouter = Router();
 topicRouter.use(authMiddleware);
-  
-// GET / - to fetch all topic name
-// 
-// POSt /new - create new topic 
-// DELETE /delete - delete topic 
-// UPDATE /update - topic name
-
-
-// GET - /:topicId/all - fetch all lists of that topic
-// POST /:topicId/new - added new List 
-// DELETE /list/delete - DELETE a List
-// POST /list/update - Update list name
 
 //Function to return all topic names 
 topicRouter.get('/', async function(req, res) {
@@ -30,12 +18,17 @@ topicRouter.get('/', async function(req, res) {
         })
         console.log(topicsFound)
         return res.status(200).json({
-            topics:topicsFound
+            status:'200',
+            topics:topicsFound,
+            message:'Topics FOund',
+            error:'None',
         })
     } catch(err) {
         console.log("Error : " + err);
         return res.status(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         });
     }
 })
@@ -52,7 +45,9 @@ topicRouter.post('/new',async function(req,res) {
         if(userFound === null) {
             console.log("User not found");
             return res.status(404).json({
-                "error":"User not found"
+                status:'404',
+                message:'None',
+                error:"User not found",
             })
         }
         newTopic = await topicModel.create({
@@ -63,12 +58,16 @@ topicRouter.post('/new',async function(req,res) {
             }
         });
         res.status(200).json({
-            "message":"Topic Created"
+            status:'200',
+            message:"Topic Created",
+            error:'None',
         })
     } catch(err) {
         console.log("Error : " + err);
         return res.status(500).json({
-            "error":'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         });
     }
 
@@ -109,13 +108,17 @@ topicRouter.delete('/delete/:id', async function(req,res) {
         await topicModel.findByIdAndDelete({_id:id})
     
         return res.status(200).json({
-            'message':"Topic Deleted"
+            status:'200',
+            message:"Topic Deleted",
+            error:'None',
         })
 
     } catch(err) {
         console.log(err);
         return res.json(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         });
     }
 
@@ -136,12 +139,16 @@ topicRouter.put('/update/:id', async function(req,res) {
             }
         )
         res.status(200).json({
-            'message':"Topic Name Updated"
+            status:'200',
+            message:"Topic Name Updated",
+            error:'None',
         })
     } catch(err) {
         console.log("Error : " + err);
         return res.status(500).json({
-            "error":"Server Error"
+            status:'500',
+            message:'None',
+            error:"Server Error",
         })
     }
 })

@@ -18,12 +18,17 @@ todoRouter.get('/:listId/all',async function (req,res) {
         })
         console.log(todosFound);
         return res.status(200).json({
-            todos:todosFound
+            status:'200',
+            todos:todosFound,
+            message:'Todos Found',
+            error:'None',
         })
     } catch(err) {
         console.log(err);
         return res.status(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         })
     }
     
@@ -38,7 +43,9 @@ todoRouter.post('/:listId/new', async function(req,res) {
 
         if(userFound === null) {
             return res.status(404).json({
-                'error':'User not found'
+                status:'404',
+                message:'None',
+                error:'User not found',
             })
         }
 
@@ -46,7 +53,9 @@ todoRouter.post('/:listId/new', async function(req,res) {
         
         if(listFound === null) {
             return res.status(404).json({
-                'error':'List not found'
+                status:'404',
+                message:'None',
+                error:'List not found'
             })
         }
 
@@ -66,13 +75,17 @@ todoRouter.post('/:listId/new', async function(req,res) {
             }        
         })
         res.status(200).json({
-            'message':'todo addded'
+            status:'200',
+            message:'todo addded',
+            error:'None',
         })
 
     } catch(err) {
         console.log(err);
         return res.status(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         })
     }
 
@@ -91,12 +104,16 @@ todoRouter.put('/update/:id',async function(req,res) {
             done:req.body.done
         })
         res.status(200).json({
-            message:"Todo Updated"
+            status:'200',
+            message:'Todo Updated',
+            error:'None',
         })
     } catch(err) {
         console.log("Error " + err);
         res.status(500).json({
-            'error':"Server Error"
+            status:'500',
+            message:'None',
+            error:'Server Error',
         })
     }
 })
@@ -107,12 +124,16 @@ todoRouter.delete('/delete/:id', async function(req, res) {
     try{
         await todoModel.findByIdAndDelete(id)
         return res.status(200).json({
-            'message':'todo deleted'
+            status:'200',
+            message:'todo deleted',
+            error:'None',
         })
     } catch(err) {
         console.log("Error + " + err);
         return res.status(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         })
     }
 })

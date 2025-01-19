@@ -17,12 +17,17 @@ listRouter.get('/:topicId/all', async function (req,res) {
 
         console.log(listsFound);
         return res.status(200).json({
-            todoLists:listsFound
+            status:'200',
+            message:'Lists Found',
+            error:'None',
+            todoLists:listsFound,
         })
     } catch(err) {
         console.log(err);
         return res.status(500).json({
-            'error':'Failed to get the lists'
+            status:'500',
+            message:'None',
+            error:'Failed to get the lists',
         })
     }
 })
@@ -39,15 +44,19 @@ listRouter.post('/:topicId/new', async function(req,res) {
         topicFound = await topicModel.findById(topicId)
     } catch(err) {
         console.log(err);
-        return res.json(500).json({
-            'error':'Server Error'
+        return res.status(500).json({
+            status:'500',
+            message:'None',
+            error:'Server Error',
         })
     }
 
     if(topicFound === null) {
         console.log('Topic not found')
         return res.status(404).json({
-            'error':'topic not found'
+            status:'404',
+            message:'None',
+            error:'Topic not found',
         })
     }
 
@@ -60,12 +69,16 @@ listRouter.post('/:topicId/new', async function(req,res) {
             }
         })
         return res.status(200).json({
-            'message':'list created'
+            status:'200',
+            message:'list created',
+            error:'None',
         })
     } catch(err) {
         console.log(err);
         return res.status(500).json({
-            'error':'Failed to create new list'
+            status:'500',
+            message:'None',
+            error:'Failed to create new list',
         })
     }
 })
@@ -75,13 +88,17 @@ listRouter.delete('/delete/:id', async function(req, res) {
     const { id } = req.params;
     try {
         await todoListModel.findByIdAndDelete(id);
-        return res.json(200).json({
-            'message':'List Deleted'
+        return res.status(200).json({
+            status:'200',
+            message:'List Deleted',
+            erroe:'None',
         })
     } catch(err) {
         console.log(err);
         return res.status(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error'
         })
     }
 })
@@ -100,12 +117,16 @@ listRouter.put('/update/:id', async function(req,res) {
             }
         )
         return res.status(200).json({
-            'message':'list title updated'
+            status:'200',
+            message:'list title updated',
+            error:'None',
         })
     } catch(err) {
         console.log(err);
         return res.status(500).json({
-            'error':'Server Error'
+            status:'500',
+            message:'None',
+            error:'Server Error',
         })
     }
 })

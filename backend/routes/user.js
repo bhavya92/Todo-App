@@ -48,6 +48,7 @@ userRouter.post('/signup', async function(req,res) {
 
     if(!(result.success)) {
         return res.status(500).json({
+            status:'500',
             error : "Internal Server Error",
             message : "Something went wrong. Please try again later."
         })
@@ -58,6 +59,7 @@ userRouter.post('/signup', async function(req,res) {
         const user = await userModel.find({email : result.data.email});
         if(user.length !== 0) {
             return res.status(409).json({
+                status:'409',
                 error : "Conflict",
                 message : "Email already exists"
             })
@@ -95,8 +97,9 @@ userRouter.post('/signup', async function(req,res) {
 // userRouter.get('/signup/google',passport.authenticate('google'));
 userRouter.get('/validate-token',authMiddleware, function(req,res){
     res.status(200).json({
-        "error":"none",
-        "message":'Token Validated'
+        status:'200',
+        error:"none",
+        message:'Token Validated'
     })
 }) 
 
@@ -107,7 +110,9 @@ userRouter.post('/login',async function(req,res) {
 
     if(!(result.success)) {
         return res.status(400).json({
-            'error':'Bad Request'
+            status:'400',
+            message:'None',
+            error:'Bad Request'
         })
     }
 
@@ -129,6 +134,7 @@ userRouter.post('/login',async function(req,res) {
                 }).json({
                     status:'200',
                     message:"Login Success",
+                    error:'None',
                 })
             } else {
                 res.status(401).json({
@@ -155,6 +161,7 @@ userRouter.post("/logout", authMiddleware, function(req,res) {
         sameSite : 'None',
         expires : new Date(0)
     }).json({
+        status:'200',
         error:"none",
         message:"User logeged out"
     })
