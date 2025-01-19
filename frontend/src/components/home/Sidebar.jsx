@@ -7,6 +7,9 @@ import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
 import TopicRoundedIcon from '@mui/icons-material/TopicRounded';
 import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import HomeIcon from '@mui/icons-material/Home';
+import DataSaverOffRoundedIcon from '@mui/icons-material/DataSaverOffRounded';
 
 export default function SideBar() {
     const { setToggleButtonVisibilty, isSidebarVisible, setIsSidebarVisible  } = useContext(SidebarContext);
@@ -30,7 +33,29 @@ export default function SideBar() {
             </div>
             <div className="transition-all duration-300 ease-in-out 
                             grid grid-cols-1 grid-rows-7 gap-3 pl-4 pt-4">
-    
+                
+
+                <div className="transition-all duration-300 ease-in-out 
+                                cursor-pointer flex items-center 
+                                hover:bg-stone-500  hover:scale-105 
+                                w-40 p-1 rounded" >
+                    <HomeIcon sx={{ color: '#292524', fontSize: 20 }}/>
+                    <span className="text-stone-800 ml-2 text-light">
+                        Home
+                    </span>
+                </div>
+
+                <div className="transition-all duration-300 ease-in-out 
+                                cursor-pointer flex items-center 
+                                hover:bg-stone-500  hover:scale-105 
+                                w-40 p-1 rounded" >
+                    <DataSaverOffRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
+                    <span className="text-stone-800 ml-2 text-light">
+                        Dashboard
+                    </span>
+                </div>
+
+
                 <div className="transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
@@ -70,20 +95,32 @@ export default function SideBar() {
                 <div className="transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
-                    <TopicRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
-                        Topics
-                    </span>
+                                w-40 p-1 rounded justify-between" >
+                    <div className="flex items-center">
+                        <TopicRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
+                        <span className="text-stone-800 ml-2 text-light">
+                            Topics
+                        </span>
+                    </div>
+                    <div className="rounded-full hover:bg-stone-600 w-fit h-fit">
+                        <ArrowDropDownIcon sx={{ color: '#292524', fontSize: 25 }}/>
+                    </div>
+                    
                 </div>
                 <div className="transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
-                    <ChecklistRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
-                        My Lists
-                    </span>                
+                                w-40 p-1 rounded justify-between" >
+                    <div className="flex items-center">
+                        <ChecklistRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
+                        <span className="text-stone-800 ml-2 text-light">
+                            Personal
+                        </span>
+
+                    </div>
+                    <div className="rounded-full hover:bg-stone-600 w-fit h-fit">
+                        <ArrowDropDownIcon sx={{ color: '#292524', fontSize: 25 }}/>
+                    </div>                
                 </div>
             </div>
         </div>
