@@ -32,15 +32,18 @@ function App() {
           method:'GET',
           credentials : 'include',
         });
-        const data = await response.json();
-        console.log(data);
-        if(data.error === "none") { 
+        if(response.ok) {
           console.log("data is valid");
           setIsUser(true);
           setLoading(false);
+
+          //fetch all topic names
+          // fetch lists of Perosnal topic 
+
         } else {
           console.log("data is Invalid");
           setIsUser(false);
+          setLoading(false);
         }
       } catch(error) {
           console.error('Error during token validation:', error);

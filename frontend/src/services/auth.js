@@ -39,7 +39,6 @@ export const signup = async (formValues) => {
             lastName : formValues[1].value,
         })
     });
-    
     const json = await response.json();
     return json;
 

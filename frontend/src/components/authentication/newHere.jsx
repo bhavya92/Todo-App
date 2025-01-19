@@ -3,6 +3,7 @@ import { signup } from "../../services/auth";
 import { Input } from "../ui/input/formInput";
 import {  useContext, useState } from "react";
 import { AuthContext } from "../../context/authcontext";
+import { createTopic } from "../../services/topic";
 
 export default function SignupPage({closeSignup}) {
     const [ errors, setErrors ] = useState({});
@@ -55,12 +56,24 @@ export default function SignupPage({closeSignup}) {
 
             const response = await signup(event.target);
             
-            if(response.error === 'Conflict') {
+            if(response.status === '409') {
                 const newErrors = {signupError : "User Already Exists"}
                 setErrors(newErrors);
             }
-            if(response.status==='200') {
-                setIsUser(true);
+            if(response.status === '200') {
+               
+                const newTopicJson = await createTopic();
+                if(newTopicJson.status === '200') {
+                    setIsUser(true);
+                } 
+
+                if(newTopicJson.status === '409') {
+                    console.log('json ' + newTopicJson);
+                } 
+
+                if(newTopicJson.status === '500') {
+                    console.log('json ' + newTopicJson);
+                }
             }
         } else {
             console.log('Signup failed due to validation errors.');
