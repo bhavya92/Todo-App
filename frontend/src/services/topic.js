@@ -1,4 +1,5 @@
 export const fetchTopics = async() => {
+    console.log('Inside fetchTopics');
     const url = 'http://localhost:3000/topic/';
     try {
         const response = await fetch(url,{
@@ -9,6 +10,7 @@ export const fetchTopics = async() => {
             credentials:'include',
         })
         const json =await response.json();
+        console.log(typeof json);
         return json;
     } catch(err) {
         console.log(err.message);

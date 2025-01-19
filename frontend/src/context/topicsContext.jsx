@@ -2,8 +2,8 @@ import { createContext, useState } from "react";
 
 const TopicContext = createContext();
 
-const TopicProvider = ({ children }) => {
-    const [ topic, setTopic ] = useState();
+const TopicProvider = ( {children} ) => {
+    const [ topic, setTopic ] = useState(null);
 
     const value = {
         topic,

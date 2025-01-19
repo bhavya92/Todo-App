@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 const TodoContext = createContext();
 
 const TodoProvider = ({ children }) => {
-    const [ todo, setTodo ] = useState({});
+    const [ todo, setTodo ] = useState(null);
 
     const value  = {
         todo,

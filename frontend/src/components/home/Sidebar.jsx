@@ -1,5 +1,6 @@
 import { useContext} from "react"
-import { SidebarContext } from "../../context/sidebarcontext";
+import { SidebarContext } from "../../context/sidebarcontext"
+
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import LoopRoundedIcon from '@mui/icons-material/LoopRounded';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
@@ -10,13 +11,30 @@ import ChecklistRoundedIcon from '@mui/icons-material/ChecklistRounded';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import HomeIcon from '@mui/icons-material/Home';
 import DataSaverOffRoundedIcon from '@mui/icons-material/DataSaverOffRounded';
+import CircleIcon from '@mui/icons-material/Circle';
+
+import { TopicContext } from "../../context/topicsContext";
 
 export default function SideBar() {
-    const { setToggleButtonVisibilty, isSidebarVisible, setIsSidebarVisible  } = useContext(SidebarContext);
+    const{ setToggleButtonVisibilty, 
+            isSidebarVisible, setIsSidebarVisible,
+            showTopicDropdown, setShowTopicDropdown, 
+            showPersonalDropdown, setShowPersonalDropdown    
+    } = useContext(SidebarContext);
+    
+    const { topic } = useContext(TopicContext);
 
     function closeSidebar(){
         setIsSidebarVisible(false);
         setToggleButtonVisibilty("inline");
+    }
+
+    function toggleTopicDropdown() {
+        setShowTopicDropdown( s => !s )
+    }
+
+    function togglePersonalDropdown() {
+        setShowPersonalDropdown( s => !s );
     }
 
     return <>
@@ -32,10 +50,10 @@ export default function SideBar() {
                 
             </div>
             <div className="transition-all duration-300 ease-in-out 
-                            grid grid-cols-1 grid-rows-7 gap-3 pl-4 pt-4">
+                            pl-4 pt-4 flex flex-col ">
                 
 
-                <div className="transition-all duration-300 ease-in-out 
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded" >
@@ -45,7 +63,7 @@ export default function SideBar() {
                     </span>
                 </div>
 
-                <div className="transition-all duration-300 ease-in-out 
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded" >
@@ -56,7 +74,7 @@ export default function SideBar() {
                 </div>
 
 
-                <div className="transition-all duration-300 ease-in-out 
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded" >
@@ -65,7 +83,8 @@ export default function SideBar() {
                         Daily
                     </span>
                 </div>
-                <div className="transition-all duration-300 ease-in-out 
+
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded" >
@@ -74,7 +93,8 @@ export default function SideBar() {
                         Starred
                     </span>
                 </div>
-                <div className="transition-all duration-300 ease-in-out 
+
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded" >
@@ -83,7 +103,8 @@ export default function SideBar() {
                         Calendar
                     </span>
                 </div>
-                <div className="transition-all duration-300 ease-in-out 
+
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded" >
@@ -92,7 +113,8 @@ export default function SideBar() {
                         Reminders
                     </span>
                 </div>
-                <div className="transition-all duration-300 ease-in-out 
+                
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded justify-between" >
@@ -102,12 +124,25 @@ export default function SideBar() {
                             Topics
                         </span>
                     </div>
-                    <div className="rounded-full hover:bg-stone-600 w-fit h-fit">
+                    <div className="rounded-full hover:bg-stone-600 w-fit h-fit" onClick={toggleTopicDropdown}>
                         <ArrowDropDownIcon sx={{ color: '#292524', fontSize: 25 }}/>
                     </div>
-                    
                 </div>
-                <div className="transition-all duration-300 ease-in-out 
+
+                <div className={`transition-[height,opacity,padding] duration-100 ease-in-out 
+                                ${showTopicDropdown ? '' : 'hidden'}  `}>
+                        { 
+                            topic === null ? <div>No Topic Found</div> :  topic.map((item) => (
+                                                        <div className="ml-4" key={item._id}>
+                                                            <CircleIcon sx= {{ color:'#292524', fontSize:10 }}/>
+                                                            <span className="ml-2 cursor-pointer">
+                                                                {item.title}
+                                                            </span>
+                                                        </div> )) 
+                        }
+                </div>
+
+                <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
                                 w-40 p-1 rounded justify-between" >
@@ -118,10 +153,14 @@ export default function SideBar() {
                         </span>
 
                     </div>
-                    <div className="rounded-full hover:bg-stone-600 w-fit h-fit">
+                    <div className="rounded-full hover:bg-stone-600 w-fit h-fit" onClick={togglePersonalDropdown}>
                         <ArrowDropDownIcon sx={{ color: '#292524', fontSize: 25 }}/>
-                    </div>                
+                    </div>              
                 </div>
+
+                <div className={`transition-[height,opacity,padding] duration-100 ease-in-out ${showPersonalDropdown ? 'h-fit opacity-100 p-2' : 'h-0 opacity-0 p-0'}`}>
+                        Hello Hello
+                </div>  
             </div>
         </div>
         

@@ -3,16 +3,26 @@ import { login } from "../../services/auth";
 import { Button } from "../ui/button/button";
 import { Input } from "../ui/input/formInput";
 import { AuthContext } from "../../context/authcontext";
+import { fetchTopics } from "../../services/topic";
+import { TopicContext } from "../../context/topicsContext";
 
 
 export default function LoginPage({closeLogin}) {
     const { setIsUser } = useContext(AuthContext);
+    const { setTopic } = useContext(TopicContext);
     const [ errors, setErrors ] = useState({});
 
     const er = {}
     
-    function redirectToHome() {
+    async function redirectToHome() {
         console.log("Inside redirecttohome")
+        //fetch topics 
+        const topicData = await fetchTopics();
+        if(topicData.status === '200') {
+            //set topics to context variable
+            console.log(topicData.topics);
+            setTopic(topicData.topics);
+          } 
         setIsUser(true);
     }
     
