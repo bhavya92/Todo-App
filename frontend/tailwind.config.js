@@ -50,7 +50,8 @@ export default {
       fontFamily: {
         roboto: ['Roboto', 'sans-serif'],
         bungee:['Bungee Shade','sans-serif'],
-        neue:['Comic Neue','sans-serif']
+        neue:['Comic Neue','sans-serif'],
+        rampart:['Rampart One','sans-serif'],
       },
     //    keyframes: {
     //     typing: {
