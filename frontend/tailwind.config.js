@@ -47,7 +47,11 @@ export default {
     'red' : "#FF0000",
    },
     extend: {
-
+      fontFamily: {
+        roboto: ['Roboto', 'sans-serif'],
+        bungee:['Bungee Shade','sans-serif'],
+        neue:['Comic Neue','sans-serif']
+      },
     //    keyframes: {
     //     typing: {
     //       "%0": {

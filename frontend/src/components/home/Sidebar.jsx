@@ -41,10 +41,10 @@ export default function SideBar() {
         <div className={`transition-all duration-300 ease-in-out overflow-hidden bg-stone-400
                          ${isSidebarVisible ? 'w-56':'w-0'} 
                          ${isSidebarVisible ? 'w-56 opacity-100' : 'w-0 opacity-0'}
-                         shadow-lg shadow-stone-700 rounded z-20 
+                         shadow-lg shadow-stone-700 rounded-sm z-20 
                          `}>
             <div className="flex flex-row-reverse m-2 h-fit" onClick={closeSidebar}>
-                <span className="transition-all duration-300 ease-in-out w-fit h-fit cursor-pointer hover:bg-stone-500 rounded">
+                <span className="transition-all duration-300 ease-in-out w-fit h-fit cursor-pointer hover:bg-stone-500 rounded-sm">
                     <CloseRoundedIcon sx={{ color: '#292524', fontSize: 30 }}/>
                 </span>
                 
@@ -56,9 +56,9 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
+                                w-40 p-1 rounded-sm" >
                     <HomeIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
+                    <span className="text-stone-800 ml-2 font-roboto text-light">
                         Home
                     </span>
                 </div>
@@ -66,9 +66,9 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
+                                w-40 p-1 rounded-sm" >
                     <DataSaverOffRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
+                    <span className="text-stone-800 ml-2 font-roboto text-light">
                         Dashboard
                     </span>
                 </div>
@@ -77,9 +77,9 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
+                                w-40 p-1 rounded-sm" >
                     <LoopRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
+                    <span className="text-stone-800 ml-2 font-roboto text-light">
                         Daily
                     </span>
                 </div>
@@ -87,9 +87,9 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
+                                w-40 p-1 rounded-sm" >
                     <StarRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
+                    <span className="text-stone-800 ml-2 font-roboto text-light">
                         Starred
                     </span>
                 </div>
@@ -97,9 +97,9 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
+                                w-40 p-1 rounded-sm" >
                     <CalendarMonthRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
+                    <span className="text-stone-800 ml-2 font-roboto text-light">
                         Calendar
                     </span>
                 </div>
@@ -107,9 +107,9 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded" >
+                                w-40 p-1 rounded-sm" >
                     <NotificationsNoneRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                    <span className="text-stone-800 ml-2 text-light">
+                    <span className="text-stone-800 ml-2 font-roboto text-light">
                         Reminders
                     </span>
                 </div>
@@ -117,10 +117,10 @@ export default function SideBar() {
                 <div className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
                                 hover:bg-stone-500  hover:scale-105 
-                                w-40 p-1 rounded justify-between" >
+                                w-40 p-1 rounded-sm justify-between" >
                     <div className="flex items-center">
                         <TopicRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                        <span className="text-stone-800 ml-2 text-light">
+                        <span className="text-stone-800 ml-2 font-roboto text-light">
                             Topics
                         </span>
                     </div>
@@ -135,7 +135,7 @@ export default function SideBar() {
                             topic === null ? <div>No Topic Found</div> :  topic.map((item) => (
                                                         <div className="ml-4" key={item._id}>
                                                             <CircleIcon sx= {{ color:'#292524', fontSize:10 }}/>
-                                                            <span className="ml-2 cursor-pointer">
+                                                            <span className="ml-2 cursor-pointer font-roboto">
                                                                 {item.title}
                                                             </span>
                                                         </div> )) 
@@ -148,7 +148,7 @@ export default function SideBar() {
                                 w-40 p-1 rounded justify-between" >
                     <div className="flex items-center">
                         <ChecklistRoundedIcon sx={{ color: '#292524', fontSize: 20 }}/>
-                        <span className="text-stone-800 ml-2 text-light">
+                        <span className="text-stone-800 ml-2 text-light font-roboto">
                             Personal
                         </span>
 

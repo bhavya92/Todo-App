@@ -12,6 +12,11 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fontsource/bungee-shade": "^5.1.1",
+    "@fontsource/comic-neue": "^5.1.1",
+    "@fontsource/monoton": "^5.1.1",
+    "@fontsource/rampart-one": "^5.1.1",
+    "@fontsource/roboto": "^5.1.1",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
     "js-cookie": "^3.0.5",

@@ -75,7 +75,7 @@ export default function LoginPage({closeLogin}) {
             <form className="flex flex-col mt-4" onSubmit={loginHandler}>
                 <div className="mt-4">
                 {errors.email && (
-                            <span className="text-red text-xs">
+                            <span className="text-roboto text-red text-xs">
                                 {errors.email}
                             </span>
                 )}
@@ -84,7 +84,7 @@ export default function LoginPage({closeLogin}) {
 
                 <div className="mt-4">
                     {errors.password && (
-                                <span className="text-red text-xs">
+                                <span className="text-roboto text-red text-xs">
                                     {errors.password}
                                 </span>
                 )}
@@ -94,7 +94,7 @@ export default function LoginPage({closeLogin}) {
                 <div className="flex justify-center items-center">
                 <div className="mt-4">
                         {errors.loginError && (
-                                <span className="text-red text-s">
+                                <span className="text-roboto text-red text-s">
                                     {errors.loginError}
                                 </span>
                         )}
