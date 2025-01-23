@@ -1,4 +1,4 @@
-const { topicModel } = require("../db");
+const { topicModel, todoModel } = require("../db");
 const { todoListModel } = require("../db");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { Router } = require("express");
@@ -76,6 +76,8 @@ listRouter.post("/:topicId/new", async function (req, res) {
         title: topicFound.title,
       },
     });
+    console.log('New List Created');
+    console.log(newList);
     return res.status(200).json({
       status: "200",
       message: "list created",
@@ -94,9 +96,20 @@ listRouter.post("/:topicId/new", async function (req, res) {
 
 //deleting a list
 listRouter.delete("/delete/:id", async function (req, res) {
+  console.log('Deleting list');
   const { id } = req.params;
+  console.log(id);
+
   try {
+    const noOfDelete = await todoModel.deleteMany( 
+      {
+        'todoList.id':{ $eq:id }
+      } 
+    )
+    console.log(noOfDelete);
+
     await todoListModel.findByIdAndDelete(id);
+
     return res.status(200).json({
       status: "200",
       message: "List Deleted",

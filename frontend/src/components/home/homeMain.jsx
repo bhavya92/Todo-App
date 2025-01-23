@@ -65,7 +65,7 @@ export default function HomeMain() {
   }, []);
 
   useEffect(() => {
-    setTodoList(null);
+    setTodoList([]);
     setSkeletonLoader(true);
     console.log("Topic to Fetch");
     console.log(topicToFetch);
@@ -110,7 +110,12 @@ export default function HomeMain() {
 
     fetchThatListBruh();
   }, [topicToFetch, setTopicToFetch]);
-
+  
+  //due to batch rendering
+  useEffect(() => {
+    console.log("todoList updated:", todoList);
+  }, [todoList]);
+  
   async function newListHandler() {
     if(newListTitleRef.current.value === '') {
       newListTitleRef.current.focus();
@@ -120,12 +125,20 @@ export default function HomeMain() {
     const response = await newList(topicToFetch, newListTitleRef.current.value);
     if (response.status === "200") {
       console.log('Success Creating a List')
-      if(todoList === null ) {
-        setTodoList(response.newList);
-      } else {
-        setTodoList((todoList) => [...todoList, response.newList]);
-      }
-      
+      setTodoList( (prevTodoList) => {
+        const safePrevTodoList = Array.isArray(prevTodoList) ? prevTodoList : [];
+        const updatedList = [...safePrevTodoList, response.newList  ];
+        return updatedList;
+      });
+
+      setTodo( (prevTodos) => {
+        const updatedTodos = {...prevTodos};
+        updatedTodos[response.newList._id] = [];
+        return updatedTodos;
+      });
+      console.log('Updated todoList');
+      console.log(todoList);
+
     } else {
       console.log('Error Creating a List');
       console.log(response);
@@ -198,12 +211,17 @@ export default function HomeMain() {
                      scrollbar-thin scrollbar-thumb-white-600
                     scrollbar-track-white-200"
             >
-              {todoList === null ? (
-                <div>No List Found</div>
-              ) : (
-                todoList.map((item,index) => (
-                  <TodoList key={item._id} singleList={item} todosOfCurrentList={todo[item._id]} index={index} />
+              {Array.isArray(todoList) ? (
+                 todoList.map((item,index) => (
+                  <TodoList 
+                    key={item._id} 
+                    singleList={item} 
+                    todosOfCurrentList={todo[item._id]} 
+                    index={index} 
+                  />
                 ))
+              ) : (
+                <div>No List Found</div>
               )}
             </div>
           </div>

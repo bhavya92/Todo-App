@@ -2,9 +2,10 @@
 const { Router } = require("express");
 const todoRouter = Router();
 const { authMiddleware } = require("../middleware/authMiddleware");
-const { todoModel, topicModel } = require("../db");
+const { todoModel, topicModel, todoListModel } = require("../db");
 const { userModel } = require("../db");
 const e = require("express");
+const { default: mongoose } = require("mongoose");
 
 todoRouter.use(authMiddleware);
 
@@ -33,10 +34,11 @@ todoRouter.get("/:listId/all", async function (req, res) {
   }
 });
 
-todoRouter.post("/:listId/new", async function (req, res) {
+todoRouter.post("/:id/new", async function (req, res) {
   let userFound, listFound;
-  const { listId } = req.params;
-
+  const { id } = req.params;
+  console.log('new todo hitted');
+  console.log('lis Id typeof' + id);
   try {
     userFound = await userModel.findById(req.userId);
 
@@ -48,8 +50,8 @@ todoRouter.post("/:listId/new", async function (req, res) {
       });
     }
 
-    listFound = await topicModel.findById(listId);
-
+    listFound = await todoListModel.findById(id);
+    
     if (listFound === null) {
       return res.status(404).json({
         status: "404",
@@ -58,14 +60,14 @@ todoRouter.post("/:listId/new", async function (req, res) {
       });
     }
 
-    await todoModel.create({
+    const newTodo = await todoModel.create({
       title: req.body.title,
       dueDate: req.body.dueDate,
       starred: req.body.starred,
       daily: req.body.daily,
       done: false,
       todoList: {
-        id: listId,
+        id: id,
         title: listFound.title,
       },
       user: {
@@ -77,6 +79,7 @@ todoRouter.post("/:listId/new", async function (req, res) {
       status: "200",
       message: "todo addded",
       error: "None",
+      newTodo:newTodo,
     });
   } catch (err) {
     console.log(err);

@@ -92,7 +92,7 @@ topicRouter.delete("/delete/:id", async function (req, res) {
     if (todoListIds.length > 0) {
       //deleting all the todos of those lists
       await todoModel.deleteMany({
-        "todoList.id": { $in: todoListIds },
+        "todoList.id": { $eq: todoListIds },
       });
 
       //deleting the lists
