@@ -26,6 +26,20 @@ export default {
     },
 
     colors: {
+      white: {
+        '50': '#ffffff',
+        '100': '#efefef',
+        '200': '#dcdcdc',
+        '300': '#bdbdbd',
+        '400': '#989898',
+        '500': '#7c7c7c',
+        '600': '#656565',
+        '700': '#525252',
+        '800': '#464646',
+        '900': '#3d3d3d',
+        '950': '#292929',
+    },
+    
       stone: {
         50: "#fafaf9",
         100: "#f5f5f4",
@@ -39,8 +53,6 @@ export default {
         900: "#1c1917",
         950: "#0c0a09",
       },
-
-      white: "#FFFFFF",
       red: "#FF0000",
     },
     extend: {
@@ -49,6 +61,7 @@ export default {
         bungee: ["Bungee Shade", "sans-serif"],
         neue: ["Comic Neue", "sans-serif"],
         rampart: ["Rampart One", "sans-serif"],
+        cherrycreamsoda:['Cherry Cream Soda','sans-serif'],
       },
       //    keyframes: {
       //     typing: {

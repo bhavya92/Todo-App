@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 
 export default function LoginPage({ closeLogin }) {
   const { setIsUser } = useContext(AuthContext);
-  const { setTopic } = useContext(TopicContext);
   const [errors, setErrors] = useState({});
 
   const er = {};
@@ -17,14 +16,7 @@ export default function LoginPage({ closeLogin }) {
   async function redirectToHome() {
     console.log("Inside redirecttohome");
     //fetch topics
-    const topicData = await fetchTopics();
-    if (topicData.status === "200") {
-      //set topics to context variable
-      console.log(topicData.topics);
-      setTopic(topicData.topics);
-    } else {
-      setErrors("Invalid Username or Password");
-    }
+  
     setIsUser(true);
   }
 
@@ -60,6 +52,7 @@ export default function LoginPage({ closeLogin }) {
       if (response.message === "Login Success") {
         //local storage isUSer true
         console.log("aboce redirecttohome");
+
         redirectToHome();
       }
     } else {
@@ -68,8 +61,8 @@ export default function LoginPage({ closeLogin }) {
   }
   return (
     <div
-      className="relative bg-stone-300 w-fit h-fit px-6 py-3 
-                    rounded z-50 m-8 shadow-xl shadow-stone-700"
+      className="relative bg-white-300 w-fit h-fit px-6 py-3 
+                    rounded z-50 m-8 shadow-xl shadow-white-700"
     >
       <div
         className="absolute top-1 right-1 w-fit h-fit cursor-pointer"

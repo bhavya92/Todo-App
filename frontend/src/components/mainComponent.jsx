@@ -4,29 +4,19 @@ import LandingPage from "./landing/landing";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import PageNotFound from "./authentication/pageNotFound";
 import CircularProgress from "@mui/material/CircularProgress";
-import { fetchTopics } from "../services/topic";
-import { TopicContext } from "../context/topicsContext";
-import { AuthContext } from "../context/authcontext";
 import { TodoProvider } from "../context/todoContext";
 import { ListProvider } from "../context/listsContext";
-
+import { AuthContext } from "../context/authcontext";
+import { TopicProvider } from "../context/topicsContext";
 export default function MainComponent() {
-  const [isUser, setIsUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const { setTopic } = useContext(TopicContext);
+
+  const { isUser, setIsUser } = useContext(AuthContext);
 
   console.log("isAuth is " + isUser);
 
+  
   useEffect(() => {
-    // TODO : set user object in local storage
-    //isUser true or false
-    // true -> home page
-    // false -> landing
-
-    /*
-      isUser -> True -> /home  
-    */
-
     const checkAuthenticated = async () => {
       console.log("In useEffect");
       const url = "http://localhost:3000/user/validate-token";
@@ -39,15 +29,7 @@ export default function MainComponent() {
           console.log("data is valid");
           setIsUser(true);
           setLoading(false);
-
-          //fetch all topic names
-          // fetch lists of Perosnal topic
-          const topicData = await fetchTopics();
-          if (topicData.status === "200") {
-            //set topics to context variable
-            console.log(topicData.topics);
-            setTopic(topicData.topics);
-          }
+  
         } else {
           console.log("data is Invalid");
           setIsUser(false);
@@ -60,7 +42,7 @@ export default function MainComponent() {
     };
     checkAuthenticated();
   }, []);
-
+  
   if (loading) {
     return (
       <>
@@ -70,15 +52,19 @@ export default function MainComponent() {
       </>
     );
   }
+    // TODO : set user object in local storage
+    //isUser true or false
+    // true -> home page
+    // false -> landing
+
+    /*
+      isUser -> True -> /home  
+    */
+
+   
   return (
     <>
       <BrowserRouter>
-        <AuthContext.Provider
-          value={{
-            isUser: isUser,
-            setIsUser: setIsUser,
-          }}
-        >
           <Routes>
             <Route
               path="/"
@@ -94,11 +80,14 @@ export default function MainComponent() {
               path="/home"
               element={
                 isUser ? (
-                  <TodoProvider>
-                    <ListProvider>
-                      <UserHome />
-                    </ListProvider>
-                  </TodoProvider>
+                  <TopicProvider>
+                    <TodoProvider>
+                      <ListProvider>
+                        <UserHome />
+                      </ListProvider>
+                    </TodoProvider>
+                  </TopicProvider>
+                  
                 ) : (
                   <Navigate to="/landing" />
                 )
@@ -106,7 +95,6 @@ export default function MainComponent() {
             />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
-        </AuthContext.Provider>
       </BrowserRouter>
     </>
   );

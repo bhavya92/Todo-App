@@ -15,7 +15,7 @@ export default function LandingPage() {
       {showLogin && <LoginPage closeLogin={() => setShowLogin(false)} />}
       {showSignup && <SignupPage closeSignup={() => setShowSignup(false)} />}
       <div
-        className={`absolute w-screen h-screen bg-stone-50 top-0 left-0 ${pointerEvent} ${blur}`}
+        className={`absolute w-screen h-screen bg-white-50 top-0 left-0 ${pointerEvent} ${blur}`}
       >
         <Header
           onLoginClick={() => setShowLogin(true)}
@@ -23,7 +23,7 @@ export default function LandingPage() {
             setShowSignup(true);
           }}
         />
-        <div className="bg-stone-50 flex justify-center">
+        <div className="bg-white-50 flex justify-center">
           <span
             className="p-2 h-fit w-fit mt-60 text-center text-4xl 
                                     md:text-6xl font-light font-bungee"

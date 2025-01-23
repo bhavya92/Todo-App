@@ -5,7 +5,7 @@ import { SidebarProvider } from "../../context/sidebarcontext";
 
 import SideBar from "./Sidebar";
 import HomeMain from "./homeMain";
-import { TopicContext } from "../../context/topicsContext";
+import { TopicContext, TopicProvider } from "../../context/topicsContext";
 import { TodoContext } from "../../context/todoContext";
 import { ListContext } from "../../context/listsContext";
 import { DetailSidebarProvider } from "../../context/detailBar";
@@ -15,7 +15,7 @@ export default function UserHome() {
   const { setTopic } = useContext(TopicContext);
   const { setTodo } = useContext(TodoContext);
   const { setTodoList } = useContext(ListContext);
-
+  
   async function logOutHandler() {
     const response = await logout();
     if (response.error === "none") {
@@ -33,13 +33,13 @@ export default function UserHome() {
       <SidebarProvider>
         <div className="flex h-screen">
           <button
-            className="absolute top-4 right-4 w-fit h-fit bg-stone-100"
+            className="absolute top-4 right-4 w-fit h-fit bg-white-100"
             onClick={logOutHandler}
           >
             Log out
           </button>
-          <SideBar />
           <DetailSidebarProvider>
+            <SideBar />
             <HomeMain />
           </DetailSidebarProvider>
         </div>

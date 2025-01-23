@@ -10,6 +10,8 @@ export const fetchTodos = async (todoListId) => {
     });
 
     const json = await response.json();
+    console.log('In fetchTodo Service ');
+    console.log(json);
     return json;
   } catch (err) {
     console.log(err);

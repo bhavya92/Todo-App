@@ -9,6 +9,7 @@ listRouter.use(authMiddleware);
 listRouter.get("/:topicId/all", async function (req, res) {
   console.log("/:topicId/all hitted");
   const { topicId } = req.params;
+  console.log(topicId);
   let listsFound;
   try {
     listsFound = await todoListModel.find({
@@ -16,6 +17,13 @@ listRouter.get("/:topicId/all", async function (req, res) {
     });
 
     console.log(listsFound);
+    if(listsFound.length === 0) {
+      return res.status(404).json({
+        status: "404",
+        message: "No List Exist",
+        error: "None",
+      });      
+    }
     return res.status(200).json({
       status: "200",
       message: "Lists Found",
@@ -61,7 +69,7 @@ listRouter.post("/:topicId/new", async function (req, res) {
   }
 
   try {
-    await todoListModel.create({
+    const newList = await todoListModel.create({
       title: listTitle,
       topic: {
         id: topicId,
@@ -72,6 +80,7 @@ listRouter.post("/:topicId/new", async function (req, res) {
       status: "200",
       message: "list created",
       error: "None",
+      newList:newList,
     });
   } catch (err) {
     console.log(err);

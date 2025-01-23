@@ -5,13 +5,17 @@ import "@fontsource/roboto";
 import "@fontsource/bungee-shade";
 import "@fontsource/comic-neue";
 import "@fontsource/rampart-one";
+import '@fontsource/cherry-cream-soda';
+import { AuthProvider } from "./context/authcontext";
 
 function App() {
+
   return (
     <>
-      <TopicProvider>
+    <AuthProvider>
         <MainComponent />
-      </TopicProvider>
+    </AuthProvider>
+
     </>
   );
 }

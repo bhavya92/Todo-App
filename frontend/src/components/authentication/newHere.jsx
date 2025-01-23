@@ -89,7 +89,7 @@ export default function SignupPage({ closeSignup }) {
     }
   }
   return (
-    <div className="relative bg-stone-300 w-fit h-fit px-6 py-3 rounded z-50 shadow-xl shadow-stone-700">
+    <div className="relative bg-white-300 w-fit h-fit px-6 py-3 rounded z-50 shadow-xl shadow-white-700">
       <div
         className="absolute top-2 right-2 w-fit h-fit cursor-pointer"
         onClick={closeSignup}

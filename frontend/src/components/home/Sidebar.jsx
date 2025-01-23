@@ -14,8 +14,22 @@ import DataSaverOffRoundedIcon from "@mui/icons-material/DataSaverOffRounded";
 import CircleIcon from "@mui/icons-material/Circle";
 
 import { TopicContext } from "../../context/topicsContext";
+import { DetailSidebarContext } from "../../context/detailBar";
+
+
 
 export default function SideBar() {
+
+  const { setIsDetailVisible  } = useContext(DetailSidebarContext);
+  const { topic, setTopicToFetch } = useContext(TopicContext);
+
+  function setTopicToFetchHandler(topicId) {
+    setTopicToFetch(topicId); 
+  }
+
+  function openDetailBar() {
+    setIsDetailVisible(s=>!s);
+  }
   const {
     setToggleButtonVisibilty,
     isSidebarVisible,
@@ -26,7 +40,6 @@ export default function SideBar() {
     setShowPersonalDropdown,
   } = useContext(SidebarContext);
 
-  const { topic } = useContext(TopicContext);
 
   function closeSidebar() {
     setIsSidebarVisible(false);
@@ -44,14 +57,14 @@ export default function SideBar() {
   return (
     <>
       <div
-        className={`transition-all duration-300 ease-in-out overflow-hidden bg-stone-400
+        className={`transition-all duration-300 ease-in-out overflow-hidden bg-white-100
                          ${isSidebarVisible ? "w-56" : "w-0"} 
                          ${isSidebarVisible ? "w-56 opacity-100" : "w-0 opacity-0"}
-                         shadow-lg shadow-stone-700 rounded-sm z-20 
+                         shadow-lg shadow-white-700 rounded-sm z-20 
                          `}
       >
         <div className="flex flex-row-reverse m-2 h-fit" onClick={closeSidebar}>
-          <span className="transition-all duration-300 ease-in-out w-fit h-fit cursor-pointer hover:bg-stone-500 rounded-sm">
+          <span className="transition-all duration-300 ease-in-out w-fit h-fit cursor-pointer hover:bg-white-500 rounded-sm">
             <CloseRoundedIcon sx={{ color: "#292524", fontSize: 30 }} />
           </span>
         </div>
@@ -62,11 +75,11 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
           >
             <HomeIcon sx={{ color: "#292524", fontSize: 20 }} />
-            <span className="text-stone-800 ml-2 font-roboto text-light">
+            <span className="text-white-800 ml-2 font-roboto text-light">
               Home
             </span>
           </div>
@@ -74,23 +87,23 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
           >
             <DataSaverOffRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
-            <span className="text-stone-800 ml-2 font-roboto text-light">
-              Dashboard
+            <span className="text-white-800 ml-2 font-roboto text-light">
+              Stats
             </span>
           </div>
 
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
           >
             <LoopRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
-            <span className="text-stone-800 ml-2 font-roboto text-light">
+            <span className="text-white-800 ml-2 font-roboto text-light">
               Daily
             </span>
           </div>
@@ -98,11 +111,11 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
           >
             <StarRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
-            <span className="text-stone-800 ml-2 font-roboto text-light">
+            <span className="text-white-800 ml-2 font-roboto text-light">
               Starred
             </span>
           </div>
@@ -110,11 +123,11 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
           >
             <CalendarMonthRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
-            <span className="text-stone-800 ml-2 font-roboto text-light">
+            <span className="text-white-800 ml-2 font-roboto text-light">
               Calendar
             </span>
           </div>
@@ -122,13 +135,13 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
           >
             <NotificationsNoneRoundedIcon
               sx={{ color: "#292524", fontSize: 20 }}
             />
-            <span className="text-stone-800 ml-2 font-roboto text-light">
+            <span className="text-white-800 ml-2 font-roboto text-light">
               Reminders
             </span>
           </div>
@@ -136,17 +149,17 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm justify-between"
           >
-            <div className="flex items-center">
+            <div className="flex w-full items-center"  onClick={openDetailBar}>
               <TopicRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
-              <span className="text-stone-800 ml-2 font-roboto text-light">
+              <span className="text-white-800 ml-2 font-roboto text-light">
                 Topics
               </span>
             </div>
             <div
-              className="rounded-full hover:bg-stone-600 w-fit h-fit"
+              className="rounded-full hover:bg-white-600 w-fit h-fit"
               onClick={toggleTopicDropdown}
             >
               <ArrowDropDownIcon sx={{ color: "#292524", fontSize: 25 }} />
@@ -163,7 +176,7 @@ export default function SideBar() {
               topic.map((item) => (
                 <div className="ml-4" key={item._id}>
                   <CircleIcon sx={{ color: "#292524", fontSize: 10 }} />
-                  <span className="ml-2 cursor-pointer font-roboto">
+                  <span className="ml-2 cursor-pointer font-roboto" onClick = { ()=> setTopicToFetchHandler(item._id) }>
                     {item.title}
                   </span>
                 </div>
@@ -174,17 +187,17 @@ export default function SideBar() {
           <div
             className="m-1 transition-all duration-300 ease-in-out 
                                 cursor-pointer flex items-center 
-                                hover:bg-stone-500  hover:scale-105 
+                                hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded justify-between"
           >
             <div className="flex items-center">
               <ChecklistRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
-              <span className="text-stone-800 ml-2 text-light font-roboto">
+              <span className="text-white-800 ml-2 text-light font-roboto">
                 Personal
               </span>
             </div>
             <div
-              className="rounded-full hover:bg-stone-600 w-fit h-fit"
+              className="rounded-full hover:bg-white-600 w-fit h-fit"
               onClick={togglePersonalDropdown}
             >
               <ArrowDropDownIcon sx={{ color: "#292524", fontSize: 25 }} />

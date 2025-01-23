@@ -4,7 +4,7 @@ export default function Header({ onLoginClick, onSignupClick }) {
 
   return (
     <div className="flex flex-col lm:flex-row justify-between items-center ">
-      <span className="text-stone-800 font-medium ml-8 mt-3 text-base ms:text-2xl md:text-3xl w-fit h-fit font-rampart">
+      <span className="text-white-800 font-medium ml-8 mt-3 text-base ms:text-2xl md:text-3xl w-fit h-fit font-rampart">
         Tick
         <DoneOutlineRoundedIcon sx={{ fontSize: 40 }} />
         Maar
@@ -12,7 +12,7 @@ export default function Header({ onLoginClick, onSignupClick }) {
 
       <div className="p-8 flex flex-col lm:flex-row">
         <button
-          className=" text-stone-100 bg-stone-800 hover:bg-stone-600 
+          className=" text-white-100 bg-white-800 hover:bg-white-600 
                                 font-medium font-roboto rounded-sm text-base 
                                 px-5 py-2.5 mt-6 me-2 mb-2"
           onClick={onLoginClick}
@@ -21,7 +21,7 @@ export default function Header({ onLoginClick, onSignupClick }) {
         </button>
 
         <button
-          className=" text-stone-100 bg-stone-800 hover:bg-stone-600 
+          className=" text-white-100 bg-white-800 hover:bg-white-600 
                                 font-medium font-roboto rounded-sm text-base 
                                 px-5 py-2.5 mt-6 me-2 mb-2"
           onClick={onSignupClick}
