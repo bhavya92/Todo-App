@@ -1,6 +1,6 @@
 export const fetchLists = async (topicId) => {
   const URL = `http://localhost:3000/list/${topicId}/all`;
-  console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+  console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
   console.log(topicId);
   try {
     const response = await fetch(URL, {
@@ -17,7 +17,7 @@ export const fetchLists = async (topicId) => {
   }
 };
 
-export const newList = async (topicId, title='New List') => {
+export const newList = async (topicId, title = "New List") => {
   const URL = `http://localhost:3000/list/${topicId}/new`;
   try {
     const response = await fetch(URL, {

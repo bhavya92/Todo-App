@@ -61,7 +61,7 @@ topicRouter.post("/new", async function (req, res) {
       status: "200",
       message: "Topic Created",
       error: "None",
-      newTopic:newTopic,
+      newTopic: newTopic,
     });
   } catch (err) {
     console.log("Error : " + err);

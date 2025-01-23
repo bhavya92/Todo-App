@@ -1,5 +1,3 @@
 export default function DetailedTodoView() {
-    return <div>
-        
-    </div>
+  return <div></div>;
 }

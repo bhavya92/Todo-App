@@ -37,8 +37,8 @@ todoRouter.get("/:listId/all", async function (req, res) {
 todoRouter.post("/:id/new", async function (req, res) {
   let userFound, listFound;
   const { id } = req.params;
-  console.log('new todo hitted');
-  console.log('lis Id typeof' + id);
+  console.log("new todo hitted");
+  console.log("lis Id typeof" + id);
   try {
     userFound = await userModel.findById(req.userId);
 
@@ -51,7 +51,7 @@ todoRouter.post("/:id/new", async function (req, res) {
     }
 
     listFound = await todoListModel.findById(id);
-    
+
     if (listFound === null) {
       return res.status(404).json({
         status: "404",
@@ -79,7 +79,7 @@ todoRouter.post("/:id/new", async function (req, res) {
       status: "200",
       message: "todo addded",
       error: "None",
-      newTodo:newTodo,
+      newTodo: newTodo,
     });
   } catch (err) {
     console.log(err);

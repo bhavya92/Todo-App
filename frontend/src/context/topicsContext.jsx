@@ -4,7 +4,7 @@ const TopicContext = createContext();
 
 const TopicProvider = ({ children }) => {
   const [topic, setTopic] = useState(null);
-  const [ topicToFetch, setTopicToFetch ] = useState(null);
+  const [topicToFetch, setTopicToFetch] = useState(null);
   const value = {
     topic,
     setTopic,

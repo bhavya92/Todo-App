@@ -27,19 +27,19 @@ export default {
 
     colors: {
       white: {
-        '50': '#ffffff',
-        '100': '#efefef',
-        '200': '#dcdcdc',
-        '300': '#bdbdbd',
-        '400': '#989898',
-        '500': '#7c7c7c',
-        '600': '#656565',
-        '700': '#525252',
-        '800': '#464646',
-        '900': '#3d3d3d',
-        '950': '#292929',
-    },
-    
+        50: "#ffffff",
+        100: "#efefef",
+        200: "#dcdcdc",
+        300: "#bdbdbd",
+        400: "#989898",
+        500: "#7c7c7c",
+        600: "#656565",
+        700: "#525252",
+        800: "#464646",
+        900: "#3d3d3d",
+        950: "#292929",
+      },
+
       stone: {
         50: "#fafaf9",
         100: "#f5f5f4",
@@ -61,29 +61,17 @@ export default {
         bungee: ["Bungee Shade", "sans-serif"],
         neue: ["Comic Neue", "sans-serif"],
         rampart: ["Rampart One", "sans-serif"],
-        cherrycreamsoda:['Cherry Cream Soda','sans-serif'],
+        cherrycreamsoda: ["Cherry Cream Soda", "sans-serif"],
       },
-      //    keyframes: {
-      //     typing: {
-      //       "%0": {
-      //         width: "0%",
-      //         visibility: "hidden"
-      //       },
-      //       "100%": {
-      //         width: "100%"
-      //       }
-      //     },
-      //     blink: {
-      //       "50%": {
-      //         borderColor: "transparent"
-      //       },
-      //       "100%": {
-      //         borderColor: "white"
-      //       }
-      //     },},
-      //     animation: {
-      //       typing: "typing 3s steps(40), blink .75s infinite"
-      //     }
+      keyframes: {
+        toggleBg: {
+          "0%, 100%": { backgroundColor: "transparent" },
+          "50%": { backgroundColor: "#656565" },
+        },
+      },
+      animation: {
+        toggleBg: "toggleBg 1.5s infinite",
+      },
     },
   },
   plugins: [require("tailwind-scrollbar")],

@@ -4,66 +4,91 @@ import TodoItem from "./todoItem";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { ListContext } from "../../context/listsContext";
-import { deleteTodo, newTodo } from "../../services/todo";
+import { newTodo } from "../../services/todo";
 import { TodoContext } from "../../context/todoContext";
+import { TopicContext } from "../../context/topicsContext";
 
 export default function TodoList({ singleList, todosOfCurrentList, index }) {
-  const { setTodoList } = useContext(ListContext);
+  const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
+  const { topicToFetch } = useContext(TopicContext);
+  console.log("todosOfCurrentList");
+  console.log(todosOfCurrentList);
 
+  useEffect(() => {
+    console.log("Updated");
+  }, [todoList]);
   const newTodoRef = useRef(null);
-    useEffect(() => {
-      console.log("todoList updated:", todo);
-    }, [todo]);
-    
-  async function newTodoHandler(){
-    console.log('INSIDE NEW TODO HANDLER');
+  useEffect(() => {
+    console.log("todoList updated:", todo);
+  }, [todo]);
+
+  async function newTodoHandler() {
+    console.log("INSIDE NEW TODO HANDLER");
     console.log(singleList._id);
-    if(newTodoRef.current.value === ''){
+    if (newTodoRef.current.value === "") {
       newTodoRef.current.focus();
-      newTodoRef.current.placeholder = 'Task cannot be empty!';
+      newTodoRef.current.placeholder = "Task cannot be empty!";
       return;
     }
     console.log(newTodoRef.current.value);
 
     const todoObject = {
-      'title':newTodoRef.current.value,
-      'dueDate':'1/1/1',
-      'starred':false,
-      'daily':false,
-    }
+      title: newTodoRef.current.value,
+      dueDate: "1/1/1",
+      starred: false,
+      daily: false,
+    };
     try {
       const response = await newTodo(singleList._id, todoObject);
-      if(response.status === '200') {
+      if (response.status === "200") {
         //update todos context
-        setTodo( (prevTodos) => {
-          const updatedTodos = {...prevTodos};
-          console.log('Logginf');
+        setTodo((prevTodos) => {
+          console.log("prevTODOS");
+          console.log(prevTodos);
+          const safePrevTodos = Array.isArray(prevTodos) ? prevTodos : [];
+          const updatedTodos = safePrevTodos.map((item) => {
+            if (item.id === singleList._id) {
+              return {
+                ...item,
+                data: [...item.data, response.newTodo],
+              };
+            }
+            return item;
+          });
+          console.log("Logginf");
           console.log(updatedTodos);
-          if(updatedTodos === null) {
-            updatedTodos[singleList._id] = response.newTodo;
-          } else {
-            updatedTodos[singleList._id] = [...updatedTodos[singleList._id],response.newTodo];  
-          }
           return updatedTodos;
         });
       } else {
-        console.log('Error creating todo')
+        console.log("Error creating todo");
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
-
   }
 
   async function deleteListHandler() {
     const response = await deleteList(singleList._id);
     try {
       if (response.status === "200") {
+        console.log("Inside delete list 200");
         // delete corresponding todos
-        setTodoList((prevData) =>
-          prevData.filter((list) => list._id != singleList._id)
-        );
+        setTodoList((prevData) => {
+          console.log(prevData);
+          const updatedData = prevData.map((item) => {
+            if (item.id === topicToFetch) {
+              return {
+                ...item,
+                data: item.data.filter(
+                  (subItem) => subItem._id !== singleList._id,
+                ),
+              };
+            }
+            return item;
+          });
+          return updatedData;
+        });
       } else {
         console.log("DO Error Handling");
       }
@@ -90,7 +115,7 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
         </div>
         <div className="flex w-full h-fit bg-white-300 border">
           <input
-            ref = {newTodoRef}
+            ref={newTodoRef}
             className=" w-full  pl-4 py-2 bg-white-300  border-white-300 
                         focus:border-white-400 hover:border-white-400
                         focus:outline-none focus:ring-0 font-roboto font-light 
@@ -101,22 +126,27 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
           <div className="border-r h-10 my-2" />
           <div className="w-48 h-full flex items-center justify-between px-4">
             <span className="h-fit w-fit ">
-              <CalendarMonthIcon sx={{ color: "#525252",fontSize: 20 }} />
+              <CalendarMonthIcon sx={{ color: "#525252", fontSize: 20 }} />
             </span>
             <div className="border-r h-10 my-2" />
-            <button className="h-fit w-fit text-white-700 text-md" onClick={newTodoHandler} >Add Task</button>
+            <button
+              className="h-fit w-fit text-white-700 text-md"
+              onClick={newTodoHandler}
+            >
+              Add Task
+            </button>
           </div>
         </div>
       </div>
 
       {todosOfCurrentList === null ||
       typeof todosOfCurrentList === "undefined" ||
-      todosOfCurrentList.length === 0 ? (
+      todosOfCurrentList[0].data.length === 0 ? (
         <div className="ml-4 mt-4 mb-4 font-roboto font-light text-white-900">
           The list is Empty
         </div>
       ) : (
-        todosOfCurrentList?.map((item) => (
+        todosOfCurrentList[0].data?.map((item) => (
           <TodoItem key={item._id} singleTodo={item} />
         ))
       )}

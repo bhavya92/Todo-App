@@ -16,19 +16,20 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { TopicContext } from "../../context/topicsContext";
 import { DetailSidebarContext } from "../../context/detailBar";
 
-
-
 export default function SideBar() {
-
-  const { setIsDetailVisible  } = useContext(DetailSidebarContext);
+  const { setIsDetailVisible } = useContext(DetailSidebarContext);
   const { topic, setTopicToFetch } = useContext(TopicContext);
 
+  function homeHandler() {
+    setTopicToFetch(null);
+  }
+
   function setTopicToFetchHandler(topicId) {
-    setTopicToFetch(topicId); 
+    setTopicToFetch(topicId);
   }
 
   function openDetailBar() {
-    setIsDetailVisible(s=>!s);
+    setIsDetailVisible((s) => !s);
   }
   const {
     setToggleButtonVisibilty,
@@ -39,7 +40,6 @@ export default function SideBar() {
     showPersonalDropdown,
     setShowPersonalDropdown,
   } = useContext(SidebarContext);
-
 
   function closeSidebar() {
     setIsSidebarVisible(false);
@@ -77,6 +77,7 @@ export default function SideBar() {
                                 cursor-pointer flex items-center 
                                 hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm"
+            onClick={homeHandler}
           >
             <HomeIcon sx={{ color: "#292524", fontSize: 20 }} />
             <span className="text-white-800 ml-2 font-roboto text-light">
@@ -152,7 +153,7 @@ export default function SideBar() {
                                 hover:bg-white-200  hover:scale-105 
                                 w-40 p-1 rounded-sm justify-between"
           >
-            <div className="flex w-full items-center"  onClick={openDetailBar}>
+            <div className="flex w-full items-center" onClick={openDetailBar}>
               <TopicRoundedIcon sx={{ color: "#292524", fontSize: 20 }} />
               <span className="text-white-800 ml-2 font-roboto text-light">
                 Topics
@@ -176,7 +177,10 @@ export default function SideBar() {
               topic.map((item) => (
                 <div className="ml-4" key={item._id}>
                   <CircleIcon sx={{ color: "#292524", fontSize: 10 }} />
-                  <span className="ml-2 cursor-pointer font-roboto" onClick = { ()=> setTopicToFetchHandler(item._id) }>
+                  <span
+                    className="ml-2 cursor-pointer font-roboto"
+                    onClick={() => setTopicToFetchHandler(item._id)}
+                  >
                     {item.title}
                   </span>
                 </div>

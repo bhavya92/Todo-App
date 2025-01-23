@@ -4,20 +4,12 @@ import { Input } from "../ui/input/formInput";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authcontext";
 import { createTopic } from "../../services/topic";
-import { TopicContext } from "../../context/topicsContext";
-import { fetchTopics } from "../../services/topic";
 
 export default function SignupPage({ closeSignup }) {
   const [errors, setErrors] = useState({});
   const { setIsUser } = useContext(AuthContext);
-  const { setTopic } = useContext(TopicContext);
-  async function redirectToHome() {
-    const topicData = await fetchTopics();
-    if (topicData.status === "200") {
-      //set topics to context variable
-      console.log(topicData.topics);
-      setTopic(topicData.topics);
-    }
+
+  function redirectToHome() {
     setIsUser(true);
   }
 

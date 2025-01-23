@@ -17,12 +17,12 @@ listRouter.get("/:topicId/all", async function (req, res) {
     });
 
     console.log(listsFound);
-    if(listsFound.length === 0) {
+    if (listsFound.length === 0) {
       return res.status(404).json({
         status: "404",
         message: "No List Exist",
         error: "None",
-      });      
+      });
     }
     return res.status(200).json({
       status: "200",
@@ -76,13 +76,13 @@ listRouter.post("/:topicId/new", async function (req, res) {
         title: topicFound.title,
       },
     });
-    console.log('New List Created');
+    console.log("New List Created");
     console.log(newList);
     return res.status(200).json({
       status: "200",
       message: "list created",
       error: "None",
-      newList:newList,
+      newList: newList,
     });
   } catch (err) {
     console.log(err);
@@ -96,16 +96,14 @@ listRouter.post("/:topicId/new", async function (req, res) {
 
 //deleting a list
 listRouter.delete("/delete/:id", async function (req, res) {
-  console.log('Deleting list');
+  console.log("Deleting list");
   const { id } = req.params;
   console.log(id);
 
   try {
-    const noOfDelete = await todoModel.deleteMany( 
-      {
-        'todoList.id':{ $eq:id }
-      } 
-    )
+    const noOfDelete = await todoModel.deleteMany({
+      "todoList.id": { $eq: id },
+    });
     console.log(noOfDelete);
 
     await todoListModel.findByIdAndDelete(id);

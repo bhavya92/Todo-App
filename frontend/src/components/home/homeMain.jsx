@@ -9,138 +9,67 @@ import { DetailSidebarContext } from "../../context/detailBar";
 import DetailedTopicView from "../topic/detailedTopicView";
 import { TopicContext } from "../../context/topicsContext";
 
-import { fetchTopics } from "../../services/topic";
-import { fetchLists, newList } from "../../services/todoList";
 import { ListContext } from "../../context/listsContext";
-import { fetchTodos } from "../../services/todo";
+
 import { TodoContext } from "../../context/todoContext";
+import { newList } from "../../services/todoList";
 
 export default function HomeMain() {
-  const { topic, setTopic, topicToFetch, setTopicToFetch } =
-    useContext(TopicContext);
+  const { topicToFetch, setTopicToFetch } = useContext(TopicContext);
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
-  const [skeletonLoader, setSkeletonLoader] = useState(false);
   const [showInputBox, setShowInpuBox] = useState(false);
   const newListTitleRef = useRef(null);
-
   function toggleInputBox() {
     setShowInpuBox((s) => !s);
   }
+  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+  console.log(todoList);
 
-  useEffect(() => {
-    console.log("Inside useEffect of HomeMain Component");
-    const fetchData = async () => {
-      //TODO : FETCH ALL DATA AND TILL THEN SHOW SEXY LOADER
-      //fetch all topic names
-      // fetch lists of Perosnal topic
-      const topicData = await fetchTopics();
-      if (topicData.status === "200") {
-        //set topics to context variable
-        console.log("fetchTopic status 200");
-        console.log(topicData.topics);
-        setTopic(topicData.topics);
-        setSkeletonLoader(false);
-        // // fetch lists of all topics
-        // // fetch todos of all topics
+  useEffect(() => {}, [topicToFetch, setTopicToFetch]);
 
-        // //Fetch Lists
-        // console.log('------------------------------------------------------------------------------------------------------');
-        // console.log(topic);
-        // console.log('------------------------------------------------------------------------------------------------------');
-        // try {
-        //   topicData.topics.forEach(element => {
-
-        //     console.log(element._id);
-        //   });
-
-        // } catch(err){
-        //   console.log(err);
-        // }
-      } else {
-        console.log("Response Code k hisab se error");
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setTodoList([]);
-    setSkeletonLoader(true);
-    console.log("Topic to Fetch");
-    console.log(topicToFetch);
-    if(topicToFetch === null) {
-      return;
-    }
-    // call fetchLists
-    async function fetchThatListBruh() {
-      console.log("Fetch that List Bruh called");
-      try {
-        console.log("Inside Try");
-        const response = await fetchLists(topicToFetch);
-        if (response.status === "200") {
-          setTodoList(response.todoLists);
-          //Fetch todos of those lists
-          console.log("Logging Todo Lists FOund");
-          console.log(response.todoLists);
-          console.log("FETCHING TODOS OF EACH LIST FOUND");
-          response.todoLists.forEach(async (element) => {
-            console.log(element);
-            console.log(element.title);
-            const todoRes = await fetchTodos(element._id);
-            if (todoRes.status === "200") {
-              console.log('Todos FETCHED LOGGING')
-              console.log(todoRes.todos);
-              setTodo( (prev) => ( { ...prev, [element._id] : todoRes.todos })  );
-              setSkeletonLoader(false);
-            } else {
-              console.log("Error fetching Todo");
-              console.log(todoRes);
-            }
-          });
-        } else if (response.status === "404") {
-          setSkeletonLoader(false);
-        } else {
-          console.log("Error fetching Lists");
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    fetchThatListBruh();
-  }, [topicToFetch, setTopicToFetch]);
-  
   //due to batch rendering
   useEffect(() => {
     console.log("todoList updated:", todoList);
-  }, [todoList]);
-  
+  }, [todoList, todo]);
+
   async function newListHandler() {
-    if(newListTitleRef.current.value === '') {
+    if (newListTitleRef.current.value === "") {
       newListTitleRef.current.focus();
-      newListTitleRef.current.placeholder = 'No Title Provided';
+      newListTitleRef.current.placeholder = "No Title Provided";
       return;
     }
     const response = await newList(topicToFetch, newListTitleRef.current.value);
     if (response.status === "200") {
-      console.log('Success Creating a List')
-      setTodoList( (prevTodoList) => {
-        const safePrevTodoList = Array.isArray(prevTodoList) ? prevTodoList : [];
-        const updatedList = [...safePrevTodoList, response.newList  ];
+      console.log("Success Creating a List");
+      console.log(topicToFetch);
+      setTodoList((prevTodoList) => {
+        console.log(prevTodoList);
+        const safePrevTodoList = Array.isArray(prevTodoList)
+          ? prevTodoList
+          : [];
+        //const updatedList = [...safePrevTodoList,{id:topicToFetch,data:[...(safePrevTodoList[topicToFetch].data), response.newList]}];
+
+        const updatedList = safePrevTodoList.map((item) => {
+          if (item.id === topicToFetch) {
+            return {
+              ...item,
+              data: [...item.data, response.newList],
+            };
+          }
+          return item;
+        });
+
         return updatedList;
       });
 
-      setTodo( (prevTodos) => {
-        const updatedTodos = {...prevTodos};
-        updatedTodos[response.newList._id] = [];
-        return updatedTodos;
+      setTodo((prevTodos) => {
+        return [...prevTodos, { id: response.newList._id, data: [] }];
       });
-      console.log('Updated todoList');
+      console.log("Updated todoList");
       console.log(todoList);
-
     } else {
-      console.log('Error Creating a List');
+      console.log("Error Creating a List");
       console.log(response);
     }
   }
@@ -174,58 +103,66 @@ export default function HomeMain() {
         >
           <MenuRoundedIcon sx={{ color: "#292524", fontSize: 30 }} />
         </div>
-        {skeletonLoader ? (
-          <div>LOADING...</div>
-        ) : (
-          <div className="relative h-full">
-            <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
-              <div
-                className={`tarnsition-all duration-200 ease-in-outw-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
-                style={{ visibility: showInputBox ? "visible" : "hidden" }}
+        <div className="relative h-full">
+          <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
+            <div
+              className={`tarnsition-all duration-200 ease-in-outw-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
+              style={{ visibility: showInputBox ? "visible" : "hidden" }}
+            >
+              <span
+                className="cursor-pointer w-fit h-fit"
+                onClick={newListHandler}
               >
-                <span
-                  className="cursor-pointer w-fit h-fit"
-                  onClick={newListHandler}
-                >
-                  <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
-                </span>
-                <input
-                  ref = {newListTitleRef}
-                  type="text"
-                  className={`h-full p-2 ml-2 mr-2 border bg-white-400 border-white-700 
+                <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
+              </span>
+              <input
+                ref={newListTitleRef}
+                type="text"
+                className={`h-full p-2 ml-2 mr-2 border bg-white-400 border-white-700 
                               focus:border-white-900 hover:border-white-900
                               focus:outline-none focus:ring-0 font-roboto font-light 
                               text-white-900 placeholder-white-700 text-md`}
-                  placeholder="Add Title of List"
-                />
-              </div>
-              <span
-                className="cursor-pointer bg-white-400 rounded p-2"
-                onClick={toggleInputBox}
-              >
-                Create List
-              </span>
+                placeholder="Add Title of List"
+              />
             </div>
+            <span
+              className="cursor-pointer bg-white-400 rounded p-2"
+              onClick={toggleInputBox}
+            >
+              Create List
+            </span>
+          </div>
+          {topicToFetch !== null ? (
             <div
               className="p-6 mt-10 h-full columns-2 gap-8  overflow-y-auto
                      scrollbar-thin scrollbar-thumb-white-600
                     scrollbar-track-white-200"
             >
-              {Array.isArray(todoList) ? (
-                 todoList.map((item,index) => (
-                  <TodoList 
-                    key={item._id} 
-                    singleList={item} 
-                    todosOfCurrentList={todo[item._id]} 
-                    index={index} 
-                  />
-                ))
-              ) : (
-                <div>No List Found</div>
+              {todoList.map((item) =>
+                item.id === topicToFetch ? (
+                  Array.isArray(item.data) && item.data.length > 0 ? (
+                    item.data.map((SubItem, index) => (
+                      <TodoList
+                        key={SubItem._id}
+                        singleList={SubItem}
+                        todosOfCurrentList={todo.filter(
+                          (item) => item.id === SubItem._id,
+                        )}
+                        index={index}
+                      />
+                    ))
+                  ) : (
+                    <div key={item._id}>No List Found</div>
+                  )
+                ) : null,
               )}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="h-full w-full flex items-center justify-center text-3xl">
+              HOMEEE
+            </div>
+          )}
+        </div>
       </div>
       <div
         className={`transition-all duration-300 ease-in-out flex-none 

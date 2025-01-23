@@ -16,7 +16,7 @@ export default function LoginPage({ closeLogin }) {
   async function redirectToHome() {
     console.log("Inside redirecttohome");
     //fetch topics
-  
+
     setIsUser(true);
   }
 

@@ -1,10 +1,7 @@
 import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 
-
-export default function TodoItem( {singleTodo} ) {
-
-
+export default function TodoItem({ singleTodo }) {
   return (
     <div className="mx-2 flex items-center">
       <div className=" m-2">
