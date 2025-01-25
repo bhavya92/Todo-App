@@ -17,7 +17,7 @@ import { TopicContext } from "../../context/topicsContext";
 import { DetailSidebarContext } from "../../context/detailBar";
 
 export default function SideBar() {
-  const { setIsDetailVisible } = useContext(DetailSidebarContext);
+  const { detailBarContent, setIsDetailVisible, setDetailBarContent } = useContext(DetailSidebarContext);
   const { topic, setTopicToFetch } = useContext(TopicContext);
 
   function homeHandler() {
@@ -29,7 +29,13 @@ export default function SideBar() {
   }
 
   function openDetailBar() {
-    setIsDetailVisible((s) => !s);
+    const prevState = detailBarContent;
+    setDetailBarContent('topics')
+    console.log(prevState);
+    if(prevState === 'todo')
+      setIsDetailVisible(true);
+    else
+      setIsDetailVisible( s => !s );
   }
   const {
     setToggleButtonVisibilty,

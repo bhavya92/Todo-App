@@ -7,11 +7,15 @@ const DetailSidebarProvider = ({ children }) => {
 
   const [toggleDetailButton, setToggleDetailButton] = useState(true);
 
+  const [ detailBarContent, setDetailBarContent  ] = useState('topics');
+
   const value = {
     isDetailVisible,
     setIsDetailVisible,
     toggleDetailButton,
     setToggleDetailButton,
+    detailBarContent,
+    setDetailBarContent,
   };
 
   return (

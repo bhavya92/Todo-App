@@ -10,6 +10,7 @@ import { TopicProvider } from "../context/topicsContext";
 import TickLoader from "./ui/loader/mainPageLoader";
 import { LoadingContext } from "../context/loadingContext";
 export default function MainComponent() {
+  
   const { isloading, setIsLoading } = useContext(LoadingContext);
 
   const { isUser, setIsUser } = useContext(AuthContext);

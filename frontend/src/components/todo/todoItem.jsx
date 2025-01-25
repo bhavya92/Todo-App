@@ -1,9 +1,25 @@
 import LoopRoundedIcon from "@mui/icons-material/LoopRounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
+import { useContext } from "react";
+import { DetailSidebarContext } from "../../context/detailBar";
+import { TodoContext } from "../../context/todoContext";
 
 export default function TodoItem({ singleTodo }) {
+
+  const { setDetailBarContent, setIsDetailVisible  } = useContext(DetailSidebarContext);
+  const { setTodoInDetail  } = useContext(TodoContext);
+
+  function displayTodoHandler() {
+    setDetailBarContent('todo');
+    setTodoInDetail(singleTodo);
+    setIsDetailVisible(true);
+  }
+
   return (
-    <div className="mx-2 flex items-center">
+    <div className="transition-all duration-300 cursor-pointer 
+                    ease-in-out px-2 flex items-center hover:bg-white-200" 
+                    onClick={displayTodoHandler}
+    >
       <div className=" m-2">
         <input
           type="checkbox"

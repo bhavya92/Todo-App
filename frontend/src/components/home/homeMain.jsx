@@ -13,11 +13,15 @@ import { ListContext } from "../../context/listsContext";
 
 import { TodoContext } from "../../context/todoContext";
 import { newList } from "../../services/todoList";
+import DetailedTodoView from "../todo/detailedTodoView";
 
 export default function HomeMain() {
+
   const { topicToFetch, setTopicToFetch } = useContext(TopicContext);
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
+  const { detailBarContent } = useContext(DetailSidebarContext);
+
   const [showInputBox, setShowInpuBox] = useState(false);
   const newListTitleRef = useRef(null);
   function toggleInputBox() {
@@ -64,7 +68,9 @@ export default function HomeMain() {
       });
 
       setTodo((prevTodos) => {
-        return [...prevTodos, { id: response.newList._id, data: [] }];
+        const safePrevTodos = Array.isArray(prevTodos) ? prevTodos : []
+
+        return [...safePrevTodos, { id: response.newList._id, data: [] }];
       });
       console.log("Updated todoList");
       console.log(todoList);
@@ -174,7 +180,7 @@ export default function HomeMain() {
             className={`h-full transition-all  ease-in-out  
                         ${isDetailVisible ? "opacity-100  duration-700" : "opacity-0  duration-100"}  `}
           >
-            <DetailedTopicView />
+          {detailBarContent === 'topics' ? <DetailedTopicView /> : <DetailedTodoView/>}  
           </div>
 
           <div

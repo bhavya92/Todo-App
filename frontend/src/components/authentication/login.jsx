@@ -3,8 +3,7 @@ import { login } from "../../services/auth";
 import { Button } from "../ui/button/button";
 import { Input } from "../ui/input/formInput";
 import { AuthContext } from "../../context/authcontext";
-import { fetchTopics } from "../../services/topic";
-import { TopicContext } from "../../context/topicsContext";
+
 import PropTypes from "prop-types";
 
 export default function LoginPage({ closeLogin }) {

@@ -102,7 +102,7 @@ topicRouter.delete("/delete/:id", async function (req, res) {
     }
 
     //find topic and delete
-    await topicModel.findByIdAndDelete({ _id: id });
+    await topicModel.deleteOne({ _id: id });
 
     return res.status(200).json({
       status: "200",
