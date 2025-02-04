@@ -16,7 +16,6 @@ import { newList } from "../../services/todoList";
 import DetailedTodoView from "../todo/detailedTodoView";
 
 export default function HomeMain() {
-
   const { topicToFetch, setTopicToFetch } = useContext(TopicContext);
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
@@ -52,7 +51,6 @@ export default function HomeMain() {
         const safePrevTodoList = Array.isArray(prevTodoList)
           ? prevTodoList
           : [];
-        //const updatedList = [...safePrevTodoList,{id:topicToFetch,data:[...(safePrevTodoList[topicToFetch].data), response.newList]}];
 
         const updatedList = safePrevTodoList.map((item) => {
           if (item.id === topicToFetch) {
@@ -68,7 +66,7 @@ export default function HomeMain() {
       });
 
       setTodo((prevTodos) => {
-        const safePrevTodos = Array.isArray(prevTodos) ? prevTodos : []
+        const safePrevTodos = Array.isArray(prevTodos) ? prevTodos : [];
 
         return [...safePrevTodos, { id: response.newList._id, data: [] }];
       });
@@ -110,40 +108,40 @@ export default function HomeMain() {
           <MenuRoundedIcon sx={{ color: "#292524", fontSize: 30 }} />
         </div>
         <div className="relative h-full">
-          <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
-            <div
-              className={`tarnsition-all duration-200 ease-in-outw-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
-              style={{ visibility: showInputBox ? "visible" : "hidden" }}
-            >
-              <span
-                className="cursor-pointer w-fit h-fit"
-                onClick={newListHandler}
-              >
-                <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
-              </span>
-              <input
-                ref={newListTitleRef}
-                type="text"
-                className={`h-full p-2 ml-2 mr-2 border bg-white-400 border-white-700 
-                              focus:border-white-900 hover:border-white-900
-                              focus:outline-none focus:ring-0 font-roboto font-light 
-                              text-white-900 placeholder-white-700 text-md`}
-                placeholder="Add Title of List"
-              />
-            </div>
-            <span
-              className="cursor-pointer bg-white-400 rounded p-2"
-              onClick={toggleInputBox}
-            >
-              Create List
-            </span>
-          </div>
           {topicToFetch !== null ? (
             <div
               className="p-6 mt-10 h-full columns-2 gap-8  overflow-y-auto
                      scrollbar-thin scrollbar-thumb-white-600
                     scrollbar-track-white-200"
             >
+              <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
+                <div
+                  className={`tarnsition-all duration-200 ease-in-outw-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
+                  style={{ visibility: showInputBox ? "visible" : "hidden" }}
+                >
+                  <span
+                    className="cursor-pointer w-fit h-fit"
+                    onClick={newListHandler}
+                  >
+                    <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
+                  </span>
+                  <input
+                    ref={newListTitleRef}
+                    type="text"
+                    className={`h-full p-2 ml-2 mr-2 border bg-white-400 border-white-700 
+                              focus:border-white-900 hover:border-white-900
+                              focus:outline-none focus:ring-0 font-roboto font-light 
+                              text-white-900 placeholder-white-700 text-md`}
+                    placeholder="Add Title of List"
+                  />
+                </div>
+                <span
+                  className="cursor-pointer bg-white-400 rounded p-2"
+                  onClick={toggleInputBox}
+                >
+                  Create List
+                </span>
+              </div>
               {todoList.map((item) =>
                 item.id === topicToFetch ? (
                   Array.isArray(item.data) && item.data.length > 0 ? (
@@ -152,7 +150,7 @@ export default function HomeMain() {
                         key={SubItem._id}
                         singleList={SubItem}
                         todosOfCurrentList={todo.filter(
-                          (item) => item.id === SubItem._id,
+                          (item) => item.id === SubItem._id
                         )}
                         index={index}
                       />
@@ -160,7 +158,7 @@ export default function HomeMain() {
                   ) : (
                     <div key={item._id}>No List Found</div>
                   )
-                ) : null,
+                ) : null
               )}
             </div>
           ) : (
@@ -180,7 +178,11 @@ export default function HomeMain() {
             className={`h-full transition-all  ease-in-out  
                         ${isDetailVisible ? "opacity-100  duration-700" : "opacity-0  duration-100"}  `}
           >
-          {detailBarContent === 'topics' ? <DetailedTopicView /> : <DetailedTodoView/>}  
+            {detailBarContent === "topics" ? (
+              <DetailedTopicView />
+            ) : (
+              <DetailedTodoView />
+            )}
           </div>
 
           <div

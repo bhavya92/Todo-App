@@ -21,6 +21,8 @@ export default function SideBar() {
   const { topic, setTopicToFetch } = useContext(TopicContext);
 
   function homeHandler() {
+    setIsDetailVisible(false);
+    setDetailBarContent('topics');
     setTopicToFetch(null);
   }
 
