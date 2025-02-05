@@ -2,10 +2,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useContext } from "react";
 import { TopicContext } from "../../context/topicsContext";
 import { deleteTopic } from "../../services/topic";
+import { DetailSidebarContext } from "../../context/detailBar";
 
 export default function TopicItem() {
-  const { setTopic, setTopicToFetch } = useContext(TopicContext);
-
+  const { topic, setTopic, setTopicToFetch } = useContext(TopicContext);
+  const { setIsDetailVisible } = useContext(DetailSidebarContext);
   function setTopicToFetchHandler(topicId) {
     setTopicToFetch(topicId);
   }
@@ -14,8 +15,21 @@ export default function TopicItem() {
     try {
       const response = await deleteTopic(id);
       if (response.status === "200") {
-        // delete correspondong lists -> delete corresponding todos
+        const indexToRemove = topic.findIndex( (singleTopic) => singleTopic._id === id);
+        const topicToDisplay = indexToRemove > 0 ? topic[indexToRemove - 1] : null;
+
+        //updating topic state variable
         setTopic((prevTopics) => prevTopics.filter((topic) => topic._id != id));
+
+        //UI changes according to the topic deleted
+        if(topicToDisplay !== null) {
+          setTopicToFetch(topicToDisplay._id);
+        } else {
+          //updating state variables to show home
+          setIsDetailVisible(false);
+          setTopicToFetch(null);
+
+        }
       } else {
         console.log("Error");
       }
@@ -24,7 +38,6 @@ export default function TopicItem() {
     }
   }
 
-  const { topic } = useContext(TopicContext);
   console.log("HERE IN TopicItem");
   console.log(topic);
   return (
