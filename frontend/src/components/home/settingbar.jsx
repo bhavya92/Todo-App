@@ -4,7 +4,7 @@ import { TodoContext } from "../../context/todoContext";
 import { ListContext } from "../../context/listsContext";
 import { useContext } from "react";
 import { Settingbarcontext } from "../../context/settingbarcontext";
-
+import { logout } from "../../services/auth";
 export default function SettingBar(){
 
     const { setTopic } = useContext(TopicContext);
