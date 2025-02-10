@@ -14,18 +14,24 @@ import { ListContext } from "../../context/listsContext";
 import { TodoContext } from "../../context/todoContext";
 import { newList } from "../../services/todoList";
 import DetailedTodoView from "../todo/detailedTodoView";
+import SettingBar from "./settingbar";
+import { Settingbarcontext } from "../../context/settingbarcontext";
 
 export default function HomeMain() {
   const { topicToFetch, setTopicToFetch } = useContext(TopicContext);
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
   const { detailBarContent } = useContext(DetailSidebarContext);
+  const { isSettingbarVisible } = useContext(Settingbarcontext);
 
   const [showInputBox, setShowInpuBox] = useState(false);
   const newListTitleRef = useRef(null);
   function toggleInputBox() {
     setShowInpuBox((s) => !s);
   }
+  const pointerEvent = isSettingbarVisible ? "pointer-events-none" : "pointer-events-auto";
+  const blur = isSettingbarVisible ? "blur-sm" : "blur-none";
+
   console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
   console.log(todoList);
 
@@ -97,8 +103,8 @@ export default function HomeMain() {
   }
 
   return (
-    <div className="overflow-x-hidden overflow-y-hidden flex flex-row w-screen h-screen">
-      <div className="w-full h-full bg-white-200 flex flex-col">
+    <div className={`overflow-x-hidden overflow-y-hidden flex flex-row w-screen h-screen`}>
+      <div className={`w-full h-full bg-white-200 flex flex-col ${pointerEvent} ${blur}`}>
         <div
           className={`${toggleButtonVisibility ? "opacity-100 visible" : "opacity-0 invisible"} 
                                         transition-opcaity duration-500 ease-in-out w-fit h-fit m-4 cursor-pointer  
@@ -171,7 +177,7 @@ export default function HomeMain() {
       <div
         className={`transition-all duration-300 ease-in-out flex-none 
                     h-full bg-white-100 shadow-lg shadow-white-700 rounded-sm z-20 
-                    ${isDetailVisible ? "w-[44rem]" : "w-[3rem]"}`}
+                    ${isDetailVisible ? "w-[44rem]" : "w-[3rem]"} ${pointerEvent} ${blur}`}
       >
         <div className={`relative w-full h-full`}>
           <div
@@ -195,6 +201,7 @@ export default function HomeMain() {
           </div>
         </div>
       </div>
+      {isSettingbarVisible ? <SettingBar/> : <></>}
     </div>
   );
 }

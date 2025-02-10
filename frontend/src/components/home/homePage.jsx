@@ -14,12 +14,16 @@ import { fetchLists } from "../../services/todoList";
 import { fetchTodos } from "../../services/todo";
 import { LoadingContext } from "../../context/loadingContext";
 
+import SettingsIcon from '@mui/icons-material/Settings';
+import { Settingbarcontext } from "../../context/settingbarcontext";
+import SettingBar from "./settingbar";
+
 export default function UserHome() {
-  const { setIsUser } = useContext(AuthContext);
-  const { topic, setTopic } = useContext(TopicContext);
+  const { setTopic } = useContext(TopicContext);
   const { setTodo } = useContext(TodoContext);
-  const { todoList, setTodoList } = useContext(ListContext);
-  const { isLoading, setIsLoading } = useContext(LoadingContext);
+  const { setTodoList } = useContext(ListContext);
+  const { setIsLoading } = useContext(LoadingContext);
+  const { isSettingbarVisible, setIsSettingBarVisible } = useContext(Settingbarcontext);
 
   useEffect(() => {
     //fetch all user data here
@@ -87,28 +91,19 @@ export default function UserHome() {
     fetchData();
   }, []);
 
-  async function logOutHandler() {
-    const response = await logout();
-    if (response.error === "none") {
-      setTopic(null);
-      setTodo(null);
-      setTodoList(null);
-      setIsUser(false);
-    } else {
-      console.log("Error logging out");
-    }
+  function settingClickHandler() {
+    //TODO : Add a click effect too.
+    setIsSettingBarVisible( (prev) => !prev );
   }
 
   return (
     <>
       <SidebarProvider>
         <div className="flex h-screen">
-          <button
-            className="absolute top-4 right-4 w-fit h-fit bg-white-100"
-            onClick={logOutHandler}
-          >
-            Log out
-          </button>
+          <div className="absolute top-4 right-3 w-fit h-fit z-50 cursor-pointer"
+              onClick={settingClickHandler}>
+            <SettingsIcon/>
+          </div>
           <DetailSidebarProvider>
             <SideBar />
             <HomeMain />

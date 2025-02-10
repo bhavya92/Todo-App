@@ -42,7 +42,7 @@ export default function DetailedTodoView() {
       setSelectedDate(dayjs(todoInDetail.dueDate, "DD/MM/YYYY"));
     }
 
-    setIsToday(todoInDetail.dueDate === todayDate);
+    setIsToday(todoInDetail.dueDate === todayDate)
     return () => {
       setSelectedDate(null);
     };
