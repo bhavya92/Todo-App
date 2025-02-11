@@ -38,6 +38,8 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
       dueDate: "1/1/1",
       starred: false,
       daily: false,
+      remind:false,
+      description:"",
     };
     try {
       const response = await newTodo(singleList._id, todoObject);
@@ -113,10 +115,10 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
             <DeleteIcon sx={{ color: "#525252", fontSize: 30 }} />
           </span>
         </div>
-        <div className="flex w-full h-fit bg-white-300 border">
+        <div className="flex w-full h-fit bg-white-300 border items-center">
           <input
             ref={newTodoRef}
-            className=" w-full  pl-4 py-2 bg-white-300  border-white-300 
+            className=" w-full  pl-4  bg-white-300  border-white-300 
                         focus:border-white-400 hover:border-white-400
                         focus:outline-none focus:ring-0 font-roboto font-light 
                         text-white-900 placeholder-white-700"
@@ -124,17 +126,10 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
             placeholder="Enter Task Here."
           />
           <div className="border-r h-10 my-2" />
-          <div className="w-48 h-full flex items-center justify-between px-4">
-            <span className="h-fit w-fit ">
-              <CalendarMonthIcon sx={{ color: "#525252", fontSize: 20 }} />
-            </span>
-            <div className="border-r h-10 my-2" />
-            <button
-              className="h-fit w-fit text-white-700 text-md"
-              onClick={newTodoHandler}
-            >
-              Add Task
-            </button>
+          <div className="w-36 h-full flex justify-center items-center cursor-pointer"
+               onClick={newTodoHandler}
+          >
+              <span className="w-fit h-full text-white-700">Add Task</span>
           </div>
         </div>
       </div>
