@@ -122,7 +122,7 @@ export default function HomeMain() {
             >
               <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
                 <div
-                  className={`tarnsition-all duration-200 ease-in-outw-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
+                  className={`tarnsition-all duration-200 ease-in-out w-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
                   style={{ visibility: showInputBox ? "visible" : "hidden" }}
                 >
                   <span

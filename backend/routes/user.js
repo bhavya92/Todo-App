@@ -96,6 +96,9 @@ userRouter.post("/signup", async function (req, res) {
         status: "200",
         error: "none",
         message: "Signup Success",
+        email: newUser.email,
+        firstName : newUser.firstName,
+        lastName : newUser.lastName,
       });
   } catch (err) {
     console.log(err);
@@ -136,6 +139,7 @@ userRouter.post("/login", async function (req, res) {
           process.env.JWT_SECRET,
         );
         console.log("Token generated " + token);
+        console.log(`email : ${user.email} firstName : ${user.firstName} lastName:${user.lastName}`);
         res
           .status(200)
           .cookie("token", token, {
@@ -148,6 +152,9 @@ userRouter.post("/login", async function (req, res) {
             status: "200",
             message: "Login Success",
             error: "None",
+            email: user.email,
+            firstName : user.firstName,
+            lastName : user.lastName,
           });
       } else {
         res.status(401).json({

@@ -14,6 +14,9 @@ export const login = async (formValues) => {
     });
     const data = await response.json();
     console.log(data.token);
+    localStorage.setItem("email",data.email);
+    localStorage.setItem("firstName",data.firstName);
+    localStorage.setItem("lastName",data.lastName);
     return data;
   } catch (err) {
     console.log("In catch of login");
@@ -39,6 +42,9 @@ export const signup = async (formValues) => {
       }),
     });
     const json = await response.json();
+    localStorage.setItem("email",json.email);
+    localStorage.setItem("firstName",json.firstName);
+    localStorage.setItem("lastName",json.lastName);
     return json;
   } catch (error) {
     console.error(error.message);
@@ -53,6 +59,7 @@ export const logout = async () => {
       credentials: "include",
     });
     const data = await response.json();
+    localStorage.clear();
     return data;
   } catch (error) {
     console.error("Error during token validation:", error);

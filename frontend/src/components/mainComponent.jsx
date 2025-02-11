@@ -14,10 +14,11 @@ export default function MainComponent() {
   
   const { isloading, setIsLoading } = useContext(LoadingContext);
 
-  const { isUser, setIsUser } = useContext(AuthContext);
+  const { isUser, setIsUser, setUser } = useContext(AuthContext);
+
 
   console.log("isAuth is " + isUser);
-
+  
   useEffect(() => {
     const checkAuthenticated = async () => {
       console.log("In useEffect");
@@ -34,6 +35,15 @@ export default function MainComponent() {
           console.log("data is Invalid");
           setIsUser(false);
           setIsLoading(false);
+        }
+        if(localStorage.length === 3) {
+          let userObject = {
+            email : localStorage.getItem("email"),
+            firstName : localStorage.getItem("firstName"),
+            lastName : localStorage.getItem("lastName"),
+          }
+          console.log(`${userObject.lastname}`);
+          setUser(userObject);
         }
       } catch (error) {
         console.error("Error during token validation:", error);

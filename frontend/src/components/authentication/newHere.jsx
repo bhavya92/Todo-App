@@ -7,7 +7,7 @@ import { createTopic } from "../../services/topic";
 
 export default function SignupPage({ closeSignup }) {
   const [errors, setErrors] = useState({});
-  const { setIsUser } = useContext(AuthContext);
+  const { setIsUser, setUser } = useContext(AuthContext);
 
   function redirectToHome() {
     setIsUser(true);
@@ -63,6 +63,12 @@ export default function SignupPage({ closeSignup }) {
         setErrors(newErrors);
       }
       if (response.status === "200") {
+        const userObject = {
+          email : localStorage.getItem("email"),
+          firstName : localStorage.getItem("firstName"),
+          lastName  : localStorage.getItem("lastName"),
+        }
+        setUser(userObject);
         const newTopicJson = await createTopic();
         if (newTopicJson.status === "200") {
           redirectToHome();

@@ -100,9 +100,10 @@ export default function UserHome() {
     <>
       <SidebarProvider>
         <div className="flex h-screen">
-          <div className="absolute top-4 right-3 w-fit h-fit z-50 cursor-pointer"
+          <div className="tarnsition-all duration-200 ease-in-out absolute top-4 
+                          right-3 w-fit h-fit z-50 cursor-pointer hover:scale-110"
               onClick={settingClickHandler}>
-            <SettingsIcon/>
+            <SettingsIcon sx= {{ color:"#bdbdbd",fontSize: "1.25rem" }}/>
           </div>
           <DetailSidebarProvider>
             <SideBar />

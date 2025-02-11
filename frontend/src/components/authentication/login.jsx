@@ -7,17 +7,10 @@ import { AuthContext } from "../../context/authcontext";
 import PropTypes from "prop-types";
 
 export default function LoginPage({ closeLogin }) {
-  const { setIsUser } = useContext(AuthContext);
+  const { setIsUser,setUser } = useContext(AuthContext);
   const [errors, setErrors] = useState({});
-
+  
   const er = {};
-
-  async function redirectToHome() {
-    console.log("Inside redirecttohome");
-    //fetch topics
-
-    setIsUser(true);
-  }
 
   const validateForm = (formValues) => {
     console.log("Email is " + formValues[0].value);
@@ -50,9 +43,14 @@ export default function LoginPage({ closeLogin }) {
       //Navigate to home with token
       if (response.message === "Login Success") {
         //local storage isUSer true
-        console.log("aboce redirecttohome");
-
-        redirectToHome();
+        console.log(`firstName in local storage ${localStorage.getItem("firstName")}`);
+        const userObject = {
+          email : localStorage.getItem("email"),
+          firstName : localStorage.getItem("firstName"),
+          lastName  : localStorage.getItem("lastName"),
+        }
+        setUser({...userObject});
+        setIsUser(true);
       }
     } else {
       console.log("Login failed due to validation errors.");
