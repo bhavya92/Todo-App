@@ -34,6 +34,8 @@ const todoSchema = new Schema({
   starred: Boolean,
   daily: Boolean,
   done: Boolean,
+  remind: Boolean,
+  description: String,
   todoList: {
     id: ObjectId,
     title: String,
