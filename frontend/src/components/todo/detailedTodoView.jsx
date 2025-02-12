@@ -9,6 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { updateTodo } from "../../services/todo";
+import ClearIcon from '@mui/icons-material/Clear';
 
 dayjs.extend(customParseFormat);
 
@@ -24,6 +25,7 @@ export default function DetailedTodoView() {
   const [ isToday, setIsToday ] = useState(null);
   const [ reminder, setReminder ] = useState(null);
   const [ repeat, setRepeat ] = useState(null);
+  const [ description, setDescription ] = useState(null);
   const { todoInDetail, setTodoInDetail, todo, setTodo  } = useContext(TodoContext);
   const [ selectedDate, setSelectedDate ] = useState(null);
   const descriptionRef = useRef(null);
@@ -33,6 +35,7 @@ export default function DetailedTodoView() {
     console.log("Use effect called");
     console.log("todoInDetail");
     console.log(`todoInDetail dudate ${todoInDetail.dueDate}`);
+    setDescription(todoInDetail.description);
     if(todoInDetail.dueDate === '1/1/1') {
       console.log("The date is 1/1/1");
       setSelectedDate(null);
@@ -50,12 +53,15 @@ export default function DetailedTodoView() {
 
     return () => {
       setSelectedDate(null);
+      descriptionRef.current = null;
     };
 
   },[todoInDetail])
 
 
-  
+  function clearDateHandler(){
+    setSelectedDate(null);
+  }
   function handleDateChange(newDate) {
     
     const formattedDate = newDate.format("DD/MM/YYYY");
@@ -91,21 +97,23 @@ export default function DetailedTodoView() {
   }
 
   function todayHandler(){
-    //also add update the today list and update due date to today
     let formattedDate = dayjs().format("DD/MM/YYYY");
     setSelectedDate(dayjs(formattedDate,"DD/MM/YYYY"));
      
     setTodoInDetail((prev) => ( {
       ...prev,
       dueDate: todayDate,
-    })); // TODO : here also update the local todo state array
+    }));
     setIsToday(true);
   }
 
   async function updateHandler() {
-    //TODO : here the object to send will be a temp todo object - create and discard the object according to detailedTodoView renders
-    let newDescription = descriptionRef.current.value;
-    let newDate = selectedDate.format("DD/MM/YYYY");
+    let newDescription = description;
+    let newDate;
+    if(selectedDate !== null)
+      newDate = selectedDate.format("DD/MM/YYYY");
+    else
+      newDate="1/1/1"
     
     updatedTodoObject = {
       title:todoInDetail.title,
@@ -124,7 +132,7 @@ export default function DetailedTodoView() {
       //updatinng todo state varaiable for FE
       console.log("Todo updated at backend");
       console.log(todo);
-
+      debugger
       let newTodo = todo.map((list) => ({
         ...list,
         data : list.data.map( (item) => 
@@ -132,6 +140,7 @@ export default function DetailedTodoView() {
           )
       }));
       setTodo(newTodo);
+      updatedTodoObject = {};
     }    
   }
 
@@ -151,12 +160,12 @@ export default function DetailedTodoView() {
       </div>
     </div>
     <div className="mt-10 w-full flex flex-row">
-      <div className="flex justify-center items-center basis-1/2
-                      rounded py-1 px-6 border mr-1 shadow-md shadow-white-400
+      <div className="flex justify-center items-center basis-1/2 gap-2
+                      rounded py-1 px-2 border mr-1 shadow-md shadow-white-400
                       font-roboto text-md tracking-wide text-white-950 h-20"
       >
-        <span className="basis-1/3">Due Date</span>
-        <div className="basis-2/3">
+        <span className="flex-none">Due Date</span>
+        <div className="flex-1">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
                 disablePast
@@ -167,7 +176,11 @@ export default function DetailedTodoView() {
               />
           </LocalizationProvider>
         </div>
-        
+        <div className="flex-none cursor-pointer w-fit h-fit hover:scale-105"
+              onClick = {clearDateHandler}
+        >
+          <ClearIcon sx={{ fontSize:30 }}/>
+        </div>
         
       </div>
       <div className={`flex justify-center items-center basis-1/2 cursor-pointer
@@ -198,7 +211,9 @@ export default function DetailedTodoView() {
                         shadow-md shadow-white-400 bg-white-100
                         font-roboto text-md tracking-wide text-white-950" 
                         placeholder='Description...'
-                        ref={descriptionRef}
+                        defaultValue={todoInDetail.description}
+                        value={description}
+                        onChange={(e)=>{setDescription(e.target.value)}}
     />
     <div className="flex items-center justify-center w-full border 
                     rounded p-2 bg-white-400 cursor-pointer mt-8
