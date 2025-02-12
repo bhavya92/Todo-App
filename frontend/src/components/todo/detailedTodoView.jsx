@@ -59,10 +59,17 @@ export default function DetailedTodoView() {
   },[todoInDetail])
 
 
+  function handleTextareaChange(e){
+    setDescription(e.target.value);
+    e.target.style.height = "auto"; 
+    e.target.style.height = e.target.scrollHeight + "px"; 
+  }
+
   function clearDateHandler(){
     setSelectedDate(null);
     setIsToday(false);
   }
+
   function handleDateChange(newDate) {
     
     const formattedDate = newDate.format("DD/MM/YYYY");
@@ -214,13 +221,14 @@ export default function DetailedTodoView() {
         Do it Today!!!
       </div>
     </div>
-    <textarea className="mt-10 w-full h-52 border rounded p-2
-                        shadow-md shadow-white-400 bg-white-100
+    <textarea className="mt-10 w-full border rounded p-2 resize-none
+                        shadow-md shadow-white-400 bg-white-100 overflow-hidden
                         font-roboto text-md tracking-wide text-white-950" 
                         placeholder='Description...'
                         defaultValue={todoInDetail.description}
                         value={description}
-                        onChange={(e)=>{setDescription(e.target.value)}}
+                        rows="4"
+                        onChange={handleTextareaChange}
     />
     <div className="flex items-center justify-center w-full border 
                     rounded p-2 bg-white-400 cursor-pointer mt-8
