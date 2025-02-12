@@ -1,7 +1,7 @@
 import { Checkbox } from "@mui/material";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import AddIcon from "@mui/icons-material/Add";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { TodoContext } from "../../context/todoContext";
 import { DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -16,22 +16,23 @@ dayjs.extend(customParseFormat);
 export default function DetailedTodoView() {
  
   /*
-
-    TODO : Add remind daily functionality
     TODO : starred functionality with ui change 
     TODO : Add sub task functionality with chain animation, drag and reorder
     TODO : Change checkbox colors
   */
-  
+  let updatedTodoObject = {}
   const [ isToday, setIsToday ] = useState(null);
+  const [ reminder, setReminder ] = useState(null);
+  const [ repeat, setRepeat ] = useState(null);
   const { todoInDetail, setTodoInDetail, todo, setTodo  } = useContext(TodoContext);
   const [ selectedDate, setSelectedDate ] = useState(null);
+  const descriptionRef = useRef(null);
   let todayDate = dayjs().format("DD/MM/YYYY");
 
   useEffect( () => {
     console.log("Use effect called");
     console.log("todoInDetail");
-    console.log(todoInDetail);
+    console.log(`todoInDetail dudate ${todoInDetail.dueDate}`);
     if(todoInDetail.dueDate === '1/1/1') {
       console.log("The date is 1/1/1");
       setSelectedDate(null);
@@ -42,7 +43,11 @@ export default function DetailedTodoView() {
       setSelectedDate(dayjs(todoInDetail.dueDate, "DD/MM/YYYY"));
     }
 
-    setIsToday(todoInDetail.dueDate === todayDate)
+    setIsToday(todoInDetail.dueDate === todayDate);
+    console.log(`daily ${todoInDetail.daily}`);
+    setReminder(todoInDetail.remind);
+    setRepeat(todoInDetail.daily);
+
     return () => {
       setSelectedDate(null);
     };
@@ -55,10 +60,7 @@ export default function DetailedTodoView() {
     
     const formattedDate = newDate.format("DD/MM/YYYY");
     todoInDetail.dueDate = formattedDate;
-    setTodoInDetail( (prev) => ({
-      ...prev,
-      dueDate:formattedDate,
-    }) ) // TODO :  here also update the local todo state array
+    setSelectedDate(dayjs(formattedDate,"DD/MM/YYYY"));
 
     if(formattedDate === todayDate) {
       setIsToday(true);
@@ -67,9 +69,31 @@ export default function DetailedTodoView() {
     }
   }
 
+  function remindHandler(){
+    setReminder((prevReminder) => {
+      const newReminder = !prevReminder; 
+  
+      console.log(`pre value ${prevReminder}`);
+      console.log(`new value ${newReminder}`);
+      return newReminder;
+    });
+  }
+
+  function repeatHandler(){
+    console.log("Inside Repeat Handler");
+    setRepeat((prevRepeat) => {
+      const newRepeat = !prevRepeat; 
+  
+      console.log(`pre value ${prevRepeat}`);
+      console.log(`new value ${newRepeat}`);
+      return newRepeat;
+    });
+  }
+
   function todayHandler(){
     //also add update the today list and update due date to today
-    setSelectedDate(dayjs());
+    let formattedDate = dayjs().format("DD/MM/YYYY");
+    setSelectedDate(dayjs(formattedDate,"DD/MM/YYYY"));
      
     setTodoInDetail((prev) => ( {
       ...prev,
@@ -80,7 +104,35 @@ export default function DetailedTodoView() {
 
   async function updateHandler() {
     //TODO : here the object to send will be a temp todo object - create and discard the object according to detailedTodoView renders
-    const result = await updateTodo(todoInDetail._id,todoInDetail);
+    let newDescription = descriptionRef.current.value;
+    let newDate = selectedDate.format("DD/MM/YYYY");
+    
+    updatedTodoObject = {
+      title:todoInDetail.title,
+      starred:todoInDetail.starred,
+      remind:reminder,
+      daily:repeat,
+      description: newDescription,
+      dueDate:newDate,
+    }
+
+
+    //updating at backend
+    const result = await updateTodo(todoInDetail._id,updatedTodoObject);
+    if(result.status === "200") {
+      console.log("Todo Updated succesfully");
+      //updatinng todo state varaiable for FE
+      console.log("Todo updated at backend");
+      console.log(todo);
+
+      let newTodo = todo.map((list) => ({
+        ...list,
+        data : list.data.map( (item) => 
+            item._id === todoInDetail._id ? {...item, ...updatedTodoObject} : item
+          )
+      }));
+      setTodo(newTodo);
+    }    
   }
 
   return <div className="w-full h-full p-8 flex flex-col">
@@ -118,17 +170,19 @@ export default function DetailedTodoView() {
         
         
       </div>
-      <div className="flex justify-center items-center basis-1/2 cursor-pointer
+      <div className={`flex justify-center items-center basis-1/2 cursor-pointer
                       rounded p-1 border ml-1 shadow-md shadow-white-400
-                      font-roboto text-md tracking-wide text-white-950"
+                      font-roboto text-md tracking-wide text-white-950 ${reminder ? 'bg-white-500' : ''}`}
+            onClick={remindHandler}
       >
         Remind me
       </div>
     </div>
     <div className="mt-6 w-full flex flex-row">
-      <div className="flex justify-center items-center basis-1/2 rounded p-1 
+      <div className={`flex justify-center items-center basis-1/2 rounded p-1 
                       border mr-1 shadow-md shadow-white-400 cursor-pointer
-                      font-roboto text-md tracking-wide text-white-950 h-20"
+                      font-roboto text-md tracking-wide text-white-950 h-20 ${repeat ? 'bg-white-500' : ''}`}
+            onClick={repeatHandler}
       >
         Repeat Daily
       </div>
@@ -144,6 +198,7 @@ export default function DetailedTodoView() {
                         shadow-md shadow-white-400 bg-white-100
                         font-roboto text-md tracking-wide text-white-950" 
                         placeholder='Description...'
+                        ref={descriptionRef}
     />
     <div className="flex items-center justify-center w-full border 
                     rounded p-2 bg-white-400 cursor-pointer mt-8

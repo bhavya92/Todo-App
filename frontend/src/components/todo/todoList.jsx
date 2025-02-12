@@ -39,6 +39,7 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
       starred: false,
       daily: false,
       remind:false,
+      repeat:false,
       description:"",
     };
     try {

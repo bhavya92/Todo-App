@@ -19,6 +19,7 @@ export const fetchTodos = async (todoListId) => {
 };
 
 export const newTodo = async (todoListId, todoObject) => {
+  console.log(`In newTodo service repeat ${todoObject.repeat}`)
   const URL = `http://localhost:3000/todo/${todoListId}/new`;
   try {
     const response = await fetch(URL, {
@@ -32,6 +33,8 @@ export const newTodo = async (todoListId, todoObject) => {
         dueDate: todoObject.dueDate,
         starred: todoObject.starred,
         daily: todoObject.daily,
+        remind: todoObject.remind,
+        description: todoObject.description,
       }),
     });
     const json = await response.json();
@@ -56,6 +59,8 @@ export const updateTodo = async (todoId, todoObject) => {
         starred: todoObject.starred,
         daily: todoObject.daily,
         done: todoObject.done,
+        remind: todoObject.remind,
+        description: todoObject.description,
       }),
     });
 

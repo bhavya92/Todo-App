@@ -59,13 +59,15 @@ todoRouter.post("/:id/new", async function (req, res) {
         error: "List not found",
       });
     }
-
+    console.log(`todo data recived is repeat ${req.body.repeat}`);
     const newTodo = await todoModel.create({
       title: req.body.title,
       dueDate: req.body.dueDate,
       starred: req.body.starred,
       daily: req.body.daily,
-      done: false,
+      done: req.body.done,
+      remind: req.body.remind,
+      description: req.body.description,
       todoList: {
         id: id,
         title: listFound.title,
@@ -104,6 +106,8 @@ todoRouter.put("/update/:id", async function (req, res) {
         starred: req.body.starred,
         daily: req.body.daily,
         done: req.body.done,
+        remind:req.body.remind,
+        description:req.body.description,
       },
     );
     res.status(200).json({
