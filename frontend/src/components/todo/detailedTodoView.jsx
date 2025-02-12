@@ -61,6 +61,7 @@ export default function DetailedTodoView() {
 
   function clearDateHandler(){
     setSelectedDate(null);
+    setIsToday(false);
   }
   function handleDateChange(newDate) {
     
@@ -97,14 +98,20 @@ export default function DetailedTodoView() {
   }
 
   function todayHandler(){
-    let formattedDate = dayjs().format("DD/MM/YYYY");
-    setSelectedDate(dayjs(formattedDate,"DD/MM/YYYY"));
-     
-    setTodoInDetail((prev) => ( {
-      ...prev,
-      dueDate: todayDate,
-    }));
-    setIsToday(true);
+    if(isToday === null || isToday === false) {
+      let formattedDate = dayjs().format("DD/MM/YYYY");
+      setSelectedDate(dayjs(formattedDate,"DD/MM/YYYY"));
+       
+      setTodoInDetail((prev) => ( {
+        ...prev,
+        dueDate: todayDate,
+      }));
+      setIsToday(true);
+    } else {
+      setSelectedDate(null);
+      setIsToday(false);
+    }
+
   }
 
   async function updateHandler() {
@@ -114,7 +121,7 @@ export default function DetailedTodoView() {
       newDate = selectedDate.format("DD/MM/YYYY");
     else
       newDate="1/1/1"
-    
+
     updatedTodoObject = {
       title:todoInDetail.title,
       starred:todoInDetail.starred,
