@@ -1,4 +1,4 @@
-import { Checkbox } from "@mui/material";
+import Checkbox from '@mui/material/Checkbox';
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
 import AddIcon from "@mui/icons-material/Add";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -177,7 +177,11 @@ export default function DetailedTodoView() {
                     border rounded shadow-md shadow-white-400">
       <div className="h-fit w-full flex justify-between items-center ">
         <div className="w-fit ">
-          <Checkbox/>
+          <Checkbox sx= {{ color: "#525252",
+          '&.Mui-checked': {
+            color: "#989898",
+            }, 
+          }}/>
           <span className="font-roboto text-md tracking-wide text-white-950">{todoInDetail.title}</span>
         </div>  
           <div className="w-fit h-fit cursor-pointer hover:scale-110"
