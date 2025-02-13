@@ -2,16 +2,18 @@ import { useContext, useRef, useEffect } from "react";
 import { deleteList } from "../../services/todoList";
 import TodoItem from "./todoItem";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { ListContext } from "../../context/listsContext";
 import { newTodo } from "../../services/todo";
 import { TodoContext } from "../../context/todoContext";
 import { TopicContext } from "../../context/topicsContext";
+import { AlertContext } from "../../context/alertcontext";
 
 export default function TodoList({ singleList, todosOfCurrentList, index }) {
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
   const { topicToFetch } = useContext(TopicContext);
+  const { setIsAlert, setAlertMessage, setSeverity } = useContext(AlertContext);
+
   console.log("todosOfCurrentList");
   console.log(todosOfCurrentList);
 
@@ -64,7 +66,9 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
           return updatedTodos;
         });
       } else {
-        console.log("Error creating todo");
+        setSeverity("error");
+        setAlertMessage("Something went wrong.");
+        setIsAlert(true);
       }
     } catch (err) {
       console.log(err);
@@ -93,10 +97,14 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
           return updatedData;
         });
       } else {
-        console.log("DO Error Handling");
+        setSeverity("error");
+        setAlertMessage("Something went wrong.");
+        setIsAlert(true);
       }
     } catch (err) {
-      console.log(err);
+        setSeverity("error");
+        setAlertMessage("Something went wrong.");
+        setIsAlert(true);
     }
   }
 

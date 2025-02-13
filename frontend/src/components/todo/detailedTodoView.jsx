@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { updateTodo } from "../../services/todo";
 import ClearIcon from '@mui/icons-material/Clear';
+import { AlertContext } from "../../context/alertcontext";
 
 dayjs.extend(customParseFormat);
 
@@ -29,7 +30,7 @@ export default function DetailedTodoView() {
   const { todoInDetail, setTodoInDetail, todo, setTodo  } = useContext(TodoContext);
   const [ selectedDate, setSelectedDate ] = useState(null);
   const [isStarred, setIsStarred] = useState(null);
-
+  const { setIsAlert, setAlertMessage, setSeverity } = useContext(AlertContext);
   const descriptionRef = useRef(null);
   let todayDate = dayjs().format("DD/MM/YYYY");
 
@@ -160,8 +161,15 @@ export default function DetailedTodoView() {
           )
       }));
       setTodo(newTodo);
+      setSeverity("success");
+      setAlertMessage("Todo Updated");
+      setIsAlert(true);
       updatedTodoObject = {};
-    }    
+    } else {
+      setSeverity("error");
+      setAlertMessage("Something went wrong.");
+      setIsAlert(true);
+    }   
   }
 
   return <div className="w-full h-full px-8 py-12 flex flex-col">
@@ -234,7 +242,6 @@ export default function DetailedTodoView() {
                         shadow-md shadow-white-400 bg-white-100 overflow-hidden
                         font-roboto text-md tracking-wide text-white-950" 
                         placeholder='Description...'
-                        defaultValue={todoInDetail.description}
                         value={description}
                         rows="4"
                         onChange={handleTextareaChange}

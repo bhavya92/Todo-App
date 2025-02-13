@@ -16,6 +16,7 @@ import { newList } from "../../services/todoList";
 import DetailedTodoView from "../todo/detailedTodoView";
 import SettingBar from "./settingbar";
 import { Settingbarcontext } from "../../context/settingbarcontext";
+import { AlertContext } from "../../context/alertcontext";
 
 export default function HomeMain() {
   const { topicToFetch, setTopicToFetch } = useContext(TopicContext);
@@ -23,6 +24,7 @@ export default function HomeMain() {
   const { todo, setTodo } = useContext(TodoContext);
   const { detailBarContent } = useContext(DetailSidebarContext);
   const { isSettingbarVisible } = useContext(Settingbarcontext);
+  const { setIsAlert, setAlertMessage, setSeverity } = useContext(AlertContext);
 
   const [showInputBox, setShowInpuBox] = useState(false);
   const newListTitleRef = useRef(null);
@@ -79,7 +81,9 @@ export default function HomeMain() {
       console.log("Updated todoList");
       console.log(todoList);
     } else {
-      console.log("Error Creating a List");
+        setSeverity("error");
+        setAlertMessage("Somethinng went wrong.");
+        setIsAlert(true);
       console.log(response);
     }
   }

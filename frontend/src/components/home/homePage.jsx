@@ -16,7 +16,11 @@ import { LoadingContext } from "../../context/loadingContext";
 
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Settingbarcontext } from "../../context/settingbarcontext";
-import SettingBar from "./settingbar";
+
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
+import { AlertContext } from "../../context/alertcontext";
 
 export default function UserHome() {
   const { setTopic } = useContext(TopicContext);
@@ -24,6 +28,7 @@ export default function UserHome() {
   const { setTodoList } = useContext(ListContext);
   const { setIsLoading } = useContext(LoadingContext);
   const { isSettingbarVisible, setIsSettingBarVisible } = useContext(Settingbarcontext);
+  const { isAlert, alertMessage, severity, setIsAlert, setAlertMessage, setSeverity } = useContext(AlertContext);
 
   useEffect(() => {
     //fetch all user data here
@@ -38,6 +43,9 @@ export default function UserHome() {
         console.log(topicData.topics);
         setTopic(topicData.topics);
       } else {
+        setSeverity("error");
+        setAlertMessage("Something went wrong.");
+        setIsAlert(true);
         console.log("Response Code k hisab se error");
       }
       let response;
@@ -73,15 +81,25 @@ export default function UserHome() {
                   });
                 }
               });
+            } else {
+              setSeverity("error");
+              setAlertMessage("Something went wrong.");
+              setIsAlert(true);
             }
           } else {
             setTodoList((prevLists) => {
               const safePrevLists = Array.isArray(prevLists) ? prevLists : [];
               return [...safePrevLists, { id: element._id, data: [] }];
             });
+              setSeverity("error");
+              setAlertMessage("Something went wrong.");
+              setIsAlert(true);
           }
         });
       } else {
+        setSeverity("error");
+        setAlertMessage("Something went wrong.");
+        setIsAlert(true);
         setIsLoading((s) => !s);
         return;
       }
@@ -90,6 +108,17 @@ export default function UserHome() {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if(isAlert === null || isAlert === false)
+      return
+
+    const timer = setTimeout( ()=> {
+      setIsAlert(false);
+    },2000)
+
+    return  ()=> clearTimeout(timer);
+  },[isAlert])
 
   function settingClickHandler() {
     //TODO : Add a click effect too.
@@ -109,6 +138,17 @@ export default function UserHome() {
             <SideBar />
             <HomeMain />
           </DetailSidebarProvider>
+          {isAlert ? 
+            <div className="absolute bottom-2 left-2 z-10">
+            <Stack sx={{ width:'300px'}} spacing={2}>
+              <Alert severity={`${severity}`}>
+                <AlertTitle>{severity}</AlertTitle>
+                {alertMessage}
+              </Alert>
+            </Stack>
+          </div> : <></>
+          }
+          
         </div>
       </SidebarProvider>
     </>

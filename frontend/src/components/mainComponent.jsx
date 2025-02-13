@@ -10,6 +10,7 @@ import { TopicProvider } from "../context/topicsContext";
 import TickLoader from "./ui/loader/mainPageLoader";
 import { LoadingContext } from "../context/loadingContext";
 import { SettingbarProvider } from "../context/settingbarcontext";
+import { AlertProvider } from "../context/alertcontext";
 export default function MainComponent() {
   
   const { isloading, setIsLoading } = useContext(LoadingContext);
@@ -91,7 +92,9 @@ export default function MainComponent() {
                   <TopicProvider>
                     <TodoProvider>
                       <ListProvider>
-                        <UserHome />
+                        <AlertProvider>
+                          <UserHome/>
+                        </AlertProvider>
                       </ListProvider>
                     </TodoProvider>
                   </TopicProvider>
