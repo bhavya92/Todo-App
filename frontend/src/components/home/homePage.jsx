@@ -21,19 +21,19 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
 import { AlertContext } from "../../context/alertcontext";
+import TickLoader from "../ui/loader/mainPageLoader";
 
 export default function UserHome() {
   const { setTopic } = useContext(TopicContext);
   const { setTodo } = useContext(TodoContext);
   const { setTodoList } = useContext(ListContext);
-  const { setIsLoading } = useContext(LoadingContext);
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
   const { isSettingbarVisible, setIsSettingBarVisible } = useContext(Settingbarcontext);
   const { isAlert, alertMessage, severity, setIsAlert, setAlertMessage, setSeverity } = useContext(AlertContext);
 
   useEffect(() => {
     //fetch all user data here
     const fetchData = async () => {
-      //TODO : FETCH ALL DATA AND TILL THEN SHOW SEXY LOADER
       //fetch all topic names
       // fetch lists of Perosnal topic
       const topicData = await fetchTopics();
@@ -43,6 +43,7 @@ export default function UserHome() {
         console.log(topicData.topics);
         setTopic(topicData.topics);
       } else {
+        //TODO : SHOW ERROR SCREEN
         setSeverity("error");
         setAlertMessage("Something went wrong.");
         setIsAlert(true);
@@ -97,14 +98,14 @@ export default function UserHome() {
           }
         });
       } else {
-        setSeverity("error");
-        setAlertMessage("Something went wrong.");
-        setIsAlert(true);
+        setIsLoading(false);
         setIsLoading((s) => !s);
-        return;
+        return <>
+          <div>ERRRRORRRR</div>
+        </>;
       }
 
-      setIsLoading((s) => !s);
+      setIsLoading(false);
     };
     fetchData();
   }, []);
@@ -127,6 +128,7 @@ export default function UserHome() {
 
   return (
     <>
+      {isLoading ? <TickLoader/> : 
       <SidebarProvider>
         <div className="flex h-screen">
           <div className="tarnsition-all duration-200 ease-in-out absolute top-4 
@@ -151,6 +153,7 @@ export default function UserHome() {
           
         </div>
       </SidebarProvider>
+    }
     </>
   );
 }
