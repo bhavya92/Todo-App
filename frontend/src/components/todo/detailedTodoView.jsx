@@ -28,6 +28,8 @@ export default function DetailedTodoView() {
   const [ description, setDescription ] = useState(null);
   const { todoInDetail, setTodoInDetail, todo, setTodo  } = useContext(TodoContext);
   const [ selectedDate, setSelectedDate ] = useState(null);
+  const [isStarred, setIsStarred] = useState(null);
+
   const descriptionRef = useRef(null);
   let todayDate = dayjs().format("DD/MM/YYYY");
 
@@ -50,7 +52,7 @@ export default function DetailedTodoView() {
     console.log(`daily ${todoInDetail.daily}`);
     setReminder(todoInDetail.remind);
     setRepeat(todoInDetail.daily);
-
+    setIsStarred(todoInDetail.starred);
     return () => {
       setSelectedDate(null);
       descriptionRef.current = null;
@@ -58,6 +60,9 @@ export default function DetailedTodoView() {
 
   },[todoInDetail])
 
+  function starredHandler(){
+    setIsStarred( (prev) => !prev );
+  }
 
   function handleTextareaChange(e){
     setDescription(e.target.value);
@@ -136,6 +141,7 @@ export default function DetailedTodoView() {
       daily:repeat,
       description: newDescription,
       dueDate:newDate,
+      starred:isStarred,
     }
 
 
@@ -158,7 +164,7 @@ export default function DetailedTodoView() {
     }    
   }
 
-  return <div className="w-full h-full p-8 flex flex-col">
+  return <div className="w-full h-full px-8 py-12 flex flex-col">
     <div className="flex flex-col w-full h-fit pl-2 pt-2 pb-2 pr-4
                     border rounded shadow-md shadow-white-400">
       <div className="h-fit w-full flex justify-between items-center ">
@@ -166,12 +172,15 @@ export default function DetailedTodoView() {
           <Checkbox/>
           <span className="font-roboto text-md tracking-wide text-white-950">{todoInDetail.title}</span>
         </div>  
-          <StarRoundedIcon/>
+          <div className="w-fit h-fit cursor-pointer hover:scale-110"
+              onClick={starredHandler}>
+            <StarRoundedIcon sx= {{  color : `${isStarred ? "#e8b923":"#464646"}`}}/>
+          </div>
       </div>
-      <div className="p-1 transition-all duration-200 ease-in-out px-2 cursor-pointer hover:bg-stone-200">
+      {/* <div className="p-1 transition-all duration-200 ease-in-out px-2 cursor-pointer hover:bg-stone-200">
         <AddIcon/>
         <span className="ml-2 font-roboto text-md tracking-wide text-white-950">Add Subtask</span>
-      </div>
+      </div> */}
     </div>
     <div className="mt-10 w-full flex flex-row">
       <div className="flex justify-center items-center basis-1/2 gap-2
