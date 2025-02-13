@@ -14,6 +14,7 @@ const userSchema = new Schema({
 
 const topicSchema = new Schema({
   title: String,
+  date:String,
   user: {
     id: ObjectId,
     name: String,

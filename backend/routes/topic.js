@@ -52,6 +52,7 @@ topicRouter.post("/new", async function (req, res) {
     }
     newTopic = await topicModel.create({
       title: topicTitle,
+      date: req.body.date,
       user: {
         id: userID,
         name: userFound.firstName,
