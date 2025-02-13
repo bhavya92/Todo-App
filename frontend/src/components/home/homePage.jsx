@@ -103,7 +103,7 @@ export default function UserHome() {
           <div className="tarnsition-all duration-200 ease-in-out absolute top-4 
                           right-3 w-fit h-fit z-50 cursor-pointer hover:scale-110"
               onClick={settingClickHandler}>
-            <SettingsIcon sx= {{ color:"#bdbdbd",fontSize: "1.25rem" }}/>
+            <SettingsIcon sx= {{ color:`${isSettingbarVisible ? "#bdbdbd" : "#3d3d3d"} `,fontSize: "1.25rem" }}/>
           </div>
           <DetailSidebarProvider>
             <SideBar />
