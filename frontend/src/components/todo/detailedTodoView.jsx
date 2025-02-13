@@ -54,6 +54,7 @@ export default function DetailedTodoView() {
     setReminder(todoInDetail.remind);
     setRepeat(todoInDetail.daily);
     setIsStarred(todoInDetail.starred);
+    console.log(`starred is ${todoInDetail.starred}`);
     return () => {
       setSelectedDate(null);
       descriptionRef.current = null;
@@ -153,7 +154,6 @@ export default function DetailedTodoView() {
       //updatinng todo state varaiable for FE
       console.log("Todo updated at backend");
       console.log(todo);
-      debugger
       let newTodo = todo.map((list) => ({
         ...list,
         data : list.data.map( (item) => 

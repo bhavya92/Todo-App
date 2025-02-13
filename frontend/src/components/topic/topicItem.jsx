@@ -8,6 +8,7 @@ export default function TopicItem() {
   const { topic, setTopic, setTopicToFetch } = useContext(TopicContext);
   const { setIsDetailVisible } = useContext(DetailSidebarContext);
   function setTopicToFetchHandler(topicId) {
+    setIsDetailVisible(false);
     setTopicToFetch(topicId);
   }
 

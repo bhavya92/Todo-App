@@ -4,7 +4,7 @@ import { useContext, useEffect,useState } from "react";
 import { DetailSidebarContext } from "../../context/detailBar";
 import { TodoContext } from "../../context/todoContext";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteTodo } from "../../services/todo";
+import { deleteTodo, updateTodo } from "../../services/todo";
 
 export default function TodoItem({ singleTodo }) {
 
@@ -17,6 +17,11 @@ export default function TodoItem({ singleTodo }) {
     setIsStarred(singleTodo.starred);
     setRepeat(singleTodo.daily);
   },[])
+
+  useEffect( ()=>{
+    setIsStarred(singleTodo.starred);
+    setRepeat(singleTodo.daily);
+  },[todo])
 
   function displayTodoHandler() {
     setDetailBarContent('todo');
@@ -31,9 +36,6 @@ export default function TodoItem({ singleTodo }) {
     console.log(todo);
     const response = await deleteTodo(singleTodo._id);
     if(response.status === '200') {
-      //show alert
-      //update todo array
-      //let newTodos = todo.map( (item) => {item} )
       let newTodo = todo.map((list) => ({
         ...list,
         data : list.data.filter( (item) => 
@@ -48,12 +50,56 @@ export default function TodoItem({ singleTodo }) {
     }
   }
 
-  function starTodoHandler(){
-
+  async function starTodoHandler(event){
+    event.stopPropagation();
+    let newTodoObject = {
+      ...singleTodo,
+      starred:!(isStarred)
+    }
+    console.log(newTodoObject);
+    const response = await updateTodo(singleTodo._id, newTodoObject);
+    if(response.status === '200') {
+      let updatedTodos =todo.map((list) => ({
+        ...list,
+        data: list.data.map( (item)=> 
+          item._id === singleTodo._id ? {...item, ...newTodoObject} : item
+        )
+      }));
+      setTodo(updatedTodos);
+      setIsStarred((prev) => !prev);
+      singleTodo.starred = isStarred;
+      console.log(`starred in todoItem is ${singleTodo.starred}`);
+      setTodoInDetail(newTodoObject);
+    } else {
+      setSeverity("error");
+      setAlertMessage("Error updating todo.");
+      setIsAlert(true);
+    }
   }
 
-  function repeatTodoHandler(){
-
+  async function repeatTodoHandler(event){
+    event.stopPropagation();
+    let newTodoObject = {
+      ...singleTodo,
+      daily:!(repeat)
+    }
+    console.log(newTodoObject);
+    const response = await updateTodo(singleTodo._id, newTodoObject);
+    if(response.status === '200') {
+      let updatedTodos =todo.map((list) => ({
+        ...list,
+        data: list.data.map( (item)=> 
+          item._id === singleTodo._id ? {...item, ...newTodoObject} : item
+        )
+      }));
+      setTodo(updatedTodos);
+      setRepeat((prev) => !prev);
+      setTodoInDetail(newTodoObject);
+    } else {
+      setSeverity("error");
+      setAlertMessage("Error updating todo.");
+      setIsAlert(true);
+    }
   }
 
   return (
@@ -71,10 +117,12 @@ export default function TodoItem({ singleTodo }) {
         <span>{singleTodo.title} </span>
       </div>
       <div className="transition-all duration-200 ease-in-out flex-none m-2 w-fit h-fit  cursor-pointer hover:scale-110 "
+          onClick={(e) => starTodoHandler(e)}
           >
         <StarRoundedIcon sx={{ color: `${isStarred ? "#b08f26" : "#292524"}`, fontSize: 20 }} />
       </div>
-      <div className="transition-all duration-200 ease-in-out flex-none m-2 w-fit h-fit  cursor-pointer hover:scale-110 ">
+      <div className="transition-all duration-200 ease-in-out flex-none m-2 w-fit h-fit  cursor-pointer hover:scale-110 "
+            onClick={(e) => repeatTodoHandler(e)}>
         <LoopRoundedIcon sx={{ color: `${repeat ? "#008000" : "#292524"}`, fontSize: 20 }} />
       </div>
       <div className="transition-all duration-200 ease-in-out flex-none m-2 w-fit h-fit  cursor-pointer hover:scale-110 "
