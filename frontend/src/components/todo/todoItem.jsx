@@ -41,7 +41,24 @@ export default function TodoItem({ singleTodo }) {
         data : list.data.filter( (item) => 
             item._id !== singleTodo._id)
       }));
+      console.log(`single todo `)
+      console.log(singleTodo)
       console.log(newTodo)
+      
+      //check newTodo for next element, if exists display that else show topic list
+      let parentObject = todo.find(list => list.id === singleTodo.todoList.id) ;
+      let indexRemoved =  parentObject.data.findIndex(item => item._id === singleTodo._id);
+      if(indexRemoved < parentObject.data.length-1) {
+        console.log("Inside if");
+        console.log(parentObject.data[indexRemoved + 1]);
+        setTodoInDetail(parentObject.data[indexRemoved + 1]);
+      } else {
+        setIsDetailVisible(false);
+        setDetailBarContent('topics');
+      }
+      console.log(parentObject.data[indexRemoved]);
+      console.log(`parent object`);
+      console.log(parentObject);
       setTodo(newTodo);
     } else {
       setSeverity("error");
