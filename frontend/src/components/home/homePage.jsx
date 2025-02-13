@@ -99,7 +99,6 @@ export default function UserHome() {
         });
       } else {
         setIsLoading(false);
-        setIsLoading((s) => !s);
         return <>
           <div>ERRRRORRRR</div>
         </>;
