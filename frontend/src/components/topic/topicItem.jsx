@@ -1,5 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { TopicContext } from "../../context/topicsContext";
 import { deleteTopic } from "../../services/topic";
 import { DetailSidebarContext } from "../../context/detailBar";
@@ -61,7 +61,7 @@ export default function TopicItem() {
             </span>
             <div className="basis-4/6 flex flex-row justify-between">
               <span className="p-1 font-roboto font-light text-white-900 hover:bg-white-400 rounded-sm">
-                Created on : Date
+                Created on : {item.date}
               </span>
               <span className="p-1 font-roboto font-light text-white-900">
                 21 Lists

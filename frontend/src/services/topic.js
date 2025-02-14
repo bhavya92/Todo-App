@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const fetchTopics = async () => {
   console.log("Inside fetchTopics");
   const url = "http://localhost:3000/topic/";
@@ -19,6 +21,7 @@ export const fetchTopics = async () => {
 
 export const createTopic = async (title = "Personal") => {
   const url = "http://localhost:3000/topic/new";
+  const date = dayjs().format("DD/MM/YYYY");
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -28,6 +31,7 @@ export const createTopic = async (title = "Personal") => {
       credentials: "include",
       body: JSON.stringify({
         title,
+        date,
       }),
     });
 
