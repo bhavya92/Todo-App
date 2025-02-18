@@ -37,7 +37,7 @@ export default function HomeMain() {
   console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
   console.log(todoList);
 
-  useEffect(() => {}, [topicToFetch, setTopicToFetch]);
+  useEffect(() => { }, [topicToFetch, setTopicToFetch]);
 
   //due to batch rendering
   useEffect(() => {
@@ -81,11 +81,13 @@ export default function HomeMain() {
       console.log("Updated todoList");
       console.log(todoList);
     } else {
-        setSeverity("error");
-        setAlertMessage("Somethinng went wrong.");
-        setIsAlert(true);
+      setSeverity("error");
+      setAlertMessage("Somethinng went wrong.");
+      setIsAlert(true);
       console.log(response);
     }
+    setShowInpuBox(false);
+    newListTitleRef.current.value= "";
   }
 
   const {
@@ -126,19 +128,19 @@ export default function HomeMain() {
             >
               <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
                 <div
-                  className={`tarnsition-all duration-200 ease-in-out w-64 ${showInputBox ? "opacity-100" : "opacity-0"}`}
+                  className={`w-fit h-fit tarnsition-all duration-200 ease-in-out flex ${showInputBox ? "opacity-100" : "opacity-0"}`}
                   style={{ visibility: showInputBox ? "visible" : "hidden" }}
                 >
                   <span
-                    className="cursor-pointer w-fit h-fit"
+                    className="cursor-pointer bg-white-400 rounded p-2 w-fit h-fit"
                     onClick={newListHandler}
                   >
-                    <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
+                    Create List
                   </span>
                   <input
                     ref={newListTitleRef}
                     type="text"
-                    className={`h-full p-2 ml-2 mr-2 border bg-white-400 border-white-700 
+                    className={`h-full w-80 p-2 ml-2 mr-2 border bg-white-400 border-white-700 
                               focus:border-white-900 hover:border-white-900
                               focus:outline-none focus:ring-0 font-roboto font-light 
                               text-white-900 placeholder-white-700 text-md`}
@@ -146,10 +148,10 @@ export default function HomeMain() {
                   />
                 </div>
                 <span
-                  className="cursor-pointer bg-white-400 rounded p-2"
+                  className="cursor-pointer w-fit h-fit"
                   onClick={toggleInputBox}
                 >
-                  Create List
+                  <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
                 </span>
               </div>
               {todoList.map((item) =>
@@ -205,7 +207,7 @@ export default function HomeMain() {
           </div>
         </div>
       </div>
-      {isSettingbarVisible ? <SettingBar/> : <></>}
+      {isSettingbarVisible ? <SettingBar /> : <></>}
     </div>
   );
 }
