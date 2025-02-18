@@ -9,7 +9,7 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oidc");
 const { authMiddleware } = require("../middleware/authMiddleware");
 const { generateOtp } = require("../utils/otp_generator");
-const { generate_mail } = require("../services/mailer");
+const { generate_mail } = require("../services/otp_mailer");
 const { setData, getData } = require("../services/redis");
 
 
