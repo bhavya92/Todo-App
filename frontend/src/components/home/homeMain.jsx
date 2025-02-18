@@ -19,7 +19,7 @@ import { Settingbarcontext } from "../../context/settingbarcontext";
 import { AlertContext } from "../../context/alertcontext";
 
 export default function HomeMain() {
-  const { topicToFetch, setTopicToFetch } = useContext(TopicContext);
+  const { topicToFetch, setTopicToFetch,topic } = useContext(TopicContext);
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
   const { detailBarContent } = useContext(DetailSidebarContext);
@@ -120,9 +120,14 @@ export default function HomeMain() {
           <MenuRoundedIcon sx={{ color: "#292524", fontSize: 30 }} />
         </div>
         <div className="relative h-full">
+          {topicToFetch !== null ? <div className="ml-10 mt-4 font-roboto font-light text-2xl text-white-700">
+                {topic.find((item) => item._id === topicToFetch)?.title}
+              </div> : <></>
+          }
           {topicToFetch !== null ? (
+            
             <div
-              className="p-6 mt-10 h-full columns-2 gap-8  overflow-y-auto
+              className="p-6 mt-2 h-full columns-2 gap-8  overflow-y-auto
                      scrollbar-thin scrollbar-thumb-white-600
                     scrollbar-track-white-200"
             >
