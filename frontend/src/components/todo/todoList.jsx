@@ -113,7 +113,7 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
 
   return (
     <div
-      className={`felx flex-col pb-4 ml-4 mr-4 max-w-full h-fit rounded-sm shadow-xl bg-white-300 break-inside-avoid ${index !== 0 ? "mt-4" : ""}`}
+      className={`felx flex-col pb-4 ml-4 mr-4 max-w-full h-fit rounded-sm shadow-xl bg-white-300 break-inside-avoid ${index !== 0 ? "mt-6" : ""}`}
     >
       <div className="flex flex-col">
         <div className=" flex justify-between w-full bg-white-400 p-4">
