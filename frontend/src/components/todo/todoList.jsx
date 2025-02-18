@@ -63,14 +63,17 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
           });
           console.log("Logginf");
           console.log(updatedTodos);
+          newTodoRef.current.value = ""
           return updatedTodos;
         });
       } else {
         setSeverity("error");
         setAlertMessage("Something went wrong.");
         setIsAlert(true);
+        newTodoRef.current.value = ""
       }
     } catch (err) {
+      newTodoRef.current.value = ""
       console.log(err);
     }
   }
