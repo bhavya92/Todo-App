@@ -25,7 +25,67 @@ export const login = async (formValues) => {
   return {};
 };
 
-export const signup = async (formValues) => {
+export const send_email = async (email) => {
+  const url = "http://localhost:3000/user/verify-email";
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers : {
+        "Content-Type":"application/json; charset=UTF-8",
+      },
+      credentials:'include',
+      body: JSON.stringify({
+        email,
+      })
+    });
+
+    const json = await response.json();
+    if(json.status === '200') {
+      console.log("Here boy");
+      return '1';
+    } else if(json.status === '409') {
+      return '2';
+    } else {
+      return '0';
+    }
+  } catch(err) {
+    console.log({err});
+    return 0;
+  }
+}
+
+export const send_otp = async (email, otp) => {
+  const url = "http://localhost:3000/user/verify-otp";
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json; charset=UTF-8",
+      },
+      credentials:'include',
+      body: JSON.stringify({
+        email,
+        otp,
+      }),
+    });
+    const json = await response.json();
+    if(json.status === '200') {
+      console.log("status 200");
+      return '1';
+    } else if(json.status === '400') {
+      console.log("hey",json.status);
+      return '2';
+    } else {
+      return '0';
+    }
+  } catch(err) {
+    console.log('Error fetching');
+    console.log({err});
+    return '0';
+  }
+}
+
+export const signup = async (email, password, firstName, lastName) => {
   const url = "http://localhost:3000/user/signup";
   try {
     const response = await fetch(url, {
@@ -33,12 +93,12 @@ export const signup = async (formValues) => {
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
-      credentials: "include",
+      credentials:'include',
       body: JSON.stringify({
-        email: formValues[2].value,
-        password: formValues[3].value,
-        firstName: formValues[0].value,
-        lastName: formValues[1].value,
+        email,
+        password,
+        firstName,
+        lastName,
       }),
     });
     const json = await response.json();

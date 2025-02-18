@@ -18,9 +18,13 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.2",
+    "node-cron": "^3.0.3",
+    "node-redis": "^0.1.7",
+    "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
     "passport": "^0.7.0",
     "passport-google-oidc": "^0.1.0",
+    "redis": "^4.7.0",
     "zod": "^3.24.1"
   }
 }

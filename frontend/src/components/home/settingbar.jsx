@@ -10,10 +10,11 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 export default function SettingBar(){
 
     const { setTopic } = useContext(TopicContext);
-    const { setIsUser, user } = useContext(AuthContext);
+    const { setIsUser, user,setOtpVerified, setEmailEntered, setEmailSent  } = useContext(AuthContext);
     const { setTodo } = useContext(TodoContext);
     const { setTodoList } = useContext(ListContext);
     const { isSettingbarVisible } = useContext(Settingbarcontext);
+    
     console.log(`ls bruh ${user.lastName}`);
     let userName = user.firstName + " " + user.lastName;
     async function logOutHandler() {
@@ -23,6 +24,9 @@ export default function SettingBar(){
           setTodo(null);
           setTodoList(null);
           setIsUser(false);
+          setOtpVerified(false);
+          setEmailSent(false);
+          setEmailEntered(null);
         } else {
           console.log("Error logging out");
         }

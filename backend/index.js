@@ -11,6 +11,7 @@ const { todoRouter } = require("./routes/todo");
 const { topicRouter } = require("./routes/topic");
 const { listRouter } = require("./routes/list");
 
+
 const app = express();
 
 app.use(express.json());
@@ -28,9 +29,11 @@ app.use("/todo", todoRouter);
 app.use("/topic", topicRouter);
 app.use("/list", listRouter);
 
+
 async function main() {
   try {
     await mongoose.connect(process.env.MONGO_URL);
+   
     app.listen(parseInt(process.env.PORT));
     console.log("Listening on Port 3000");
   } catch (error) {

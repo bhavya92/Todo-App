@@ -8,6 +8,12 @@ const bcrypt = require("bcrypt");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oidc");
 const { authMiddleware } = require("../middleware/authMiddleware");
+const { generateOtp } = require("../utils/otp_generator");
+const { generate_mail } = require("../services/mailer");
+const { setData, getData } = require("../services/redis");
+
+
+
 
 async function generateHash(password) {
   return new Promise((resolve, reject) => {
@@ -41,39 +47,122 @@ const logInSchema = z.object({
 
 const userRouter = Router();
 
-userRouter.post("/signup", async function (req, res) {
-  console.log("signup end point hitted");
-
-  const userData = req.body;
-  let generatedHash = "";
-  let result = signUpSchema.safeParse(userData);
-  console.log("req : " + req.body.email);
-
-  if (!result.success) {
-    return res.status(500).json({
-      status: "500",
-      error: "Internal Server Error",
-      message: "Something went wrong. Please try again later.",
-    });
-  }
-
-  //Checking if user already exists
+userRouter.post("/verify-email", async function(req, res) {
+  console.log("Inside /verify-email");
   try {
-    const user = await userModel.find({ email: result.data.email });
-    if (user.length !== 0) {
+    const user = await userModel.find({ email: req.body.email });
+    if(user.length !== 0) {
       return res.status(409).json({
         status: "409",
         error: "Conflict",
         message: "Email already exists",
       });
     }
-    generatedHash = await generateHash(result.data.password);
+
+    let newOtp = generateOtp();
+    let result = await generate_mail(req.body.email, newOtp);
+    if(result === '1') {
+      //mail send success
+      //storing mail and otp in redis
+      console.log("Inside result === 1");
+      const result = setData(req.body.email, newOtp)
+      if(result === '0') {
+        return res.status(500).json({
+          status:"500",
+          error:"Error",
+          message:"Something went wrong",
+        })
+      }
+      return res.status(200).json({
+        status:"200",
+        error:"none",
+        message:"mail sent",
+      })
+    } else {
+      console.log(`Inside result===${result}`);
+      return res.status(500).json({
+        status:"500",
+        error:"Error sending mail",
+        message:"Something went wrong",
+      })
+    }
+  } catch(err) {
+    console.log(err);
+  }
+})
+
+userRouter.post("/verify-otp", async function(req, res) {
+  console.log("/verify-otp hitted");
+  const userOtp = req.body.otp;
+  const email = req.body.email;
+  console.log(`userOtp : ${userOtp}`);
+  console.log(`email : ${email}`);
+  const generatedOtp = await getData(email);
+  console.log(`generatedOtp : ${generatedOtp}`);
+  if(generateOtp === '0') {
+    return res.status(500).json({
+      status:"500",
+      error:"Error",
+      message:"Something went wrong",
+    })
+  }
+  if(userOtp === generatedOtp) {
+    return res.status(200).json({
+      status:"200",
+      error:"None",
+      message:"otp verified succesfully",
+    })
+  } else {
+    return res.status(400).json({
+      status:"400",
+      error:"Error verifying otp",
+      message:"Wrong otp",
+    })
+  }
+})
+
+userRouter.post("/signup", async function (req, res) {
+  console.log("signup end point hitted");
+  const email = req.body.email;
+  const password = req.body.password;
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  let generatedHash = "";
+  //let result = signUpSchema.safeParse(userData);
+  console.log("req : " + req.body.email);
+
+  // if (!result.success) {
+  //   return res.status(500).json({
+  //     status: "500",
+  //     error: "Internal Server Error",
+  //     message: "Something went wrong. Please try again later.",
+  //   });
+  // }
+
+  //Checking if user already exists
+  try {
+    // const user = await userModel.find({ email: result.data.email });
+    // if (user.length !== 0) {
+    //   return res.status(409).json({
+    //     status: "409",
+    //     error: "Conflict",
+    //     message: "Email already exists",
+    //   });
+    // }
+    //TODO : Do otp verification, if succecdes then create user else send status 
+    /* New routes -> Enter email -> Send to /verify-email -> enter otp -> to /verify-otp -> Enter pass -> to /signup  
+      Generate otp -> pass that otp to mail function -> generate mail 
+      SIMUL :: at FE ask for otp input -> comapre that otp with the one created -> if match then succeed else reject (show error)
+     */
+   
+ 
+    generatedHash = await generateHash(password);
 
     const newUser = await userModel.create({
-      email: result.data.email,
+      email: email,
       password: generatedHash,
-      firstName: result.data.firstName,
-      lastName: result.data.lastName,
+      firstName: firstName,
+      lastName: lastName,
     });
     //generate token and send
     const token = jwt.sign(
@@ -84,7 +173,7 @@ userRouter.post("/signup", async function (req, res) {
     );
     console.log("Token generated " + typeof token);
     //TODO : Create personal topic of new user created
-    res
+    return res
       .status(200)
       .cookie("token", token, {
         httpOnly: true,

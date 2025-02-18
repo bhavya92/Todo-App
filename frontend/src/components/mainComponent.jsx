@@ -82,7 +82,7 @@ export default function MainComponent() {
           />
           <Route
             path="/landing"
-            element={isUser ? <Navigate to="/home" /> : <LandingPage />}
+            element={isUser ? <Navigate to="/home" /> : <AlertProvider><LandingPage /></AlertProvider>}
           />
           <Route
             path="/home"
