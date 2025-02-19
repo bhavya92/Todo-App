@@ -17,19 +17,19 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
   console.log("todosOfCurrentList");
   console.log(todosOfCurrentList);
 
-  useEffect(() => {
-    console.log("Updated");
-  }, [todoList]);
+  // useEffect(() => {
+  //   console.log("Updated");
+  // }, [todoList]);
   const newTodoRef = useRef(null);
-  useEffect(() => {
-    console.log("todoList updated:", todo);
-  }, [todo]);
-  useEffect(() => {
-    console.log("Topic to fetch changes ");
-  }, [topicToFetch]);
-  useEffect(() => {
-    console.log("Topic updated ");
-  }, [topic]);
+  // useEffect(() => {
+  //   console.log("todoList updated:", todo);
+  // }, [todo]);
+  // useEffect(() => {
+  //   console.log("Topic to fetch changes ");
+  // }, [topicToFetch]);
+  // useEffect(() => {
+  //   console.log("Topic updated ");
+  // }, [topic]);
 
   async function newTodoHandler() {
     console.log("INSIDE NEW TODO HANDLER");

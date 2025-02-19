@@ -25,13 +25,13 @@ export default function TodoItem({ singleTodo }) {
     setRepeat(singleTodo.daily);
   },[todo])
 
-  useEffect(() => {
-    console.log("Topic to fetch changes ");
-  }, [topicToFetch]);
+  // useEffect(() => {
+  //   console.log("Topic to fetch changes ");
+  // }, [topicToFetch]);
 
-  useEffect( ()=>{
-    console.log("TodoItem , topic caused useEffect")
-  },[topic])
+  // useEffect( ()=>{
+  //   console.log("TodoItem , topic caused useEffect")
+  // },[topic])
 
   function displayTodoHandler() {
     setDetailBarContent('todo');

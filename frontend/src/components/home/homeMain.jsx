@@ -37,14 +37,14 @@ export default function HomeMain() {
   console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
   console.log(todoList);
 
-  useEffect(() => { 
-    console.log("AB KYA HOGYA");
-    console.log(topicToFetch);
-  }, [topicToFetch, setTopicToFetch]);
+  // useEffect(() => { 
+  //   console.log("AB KYA HOGYA");
+  //   console.log(topicToFetch);
+  // }, [topicToFetch, setTopicToFetch]);
   
-  useEffect(() => {
-    console.log("Updated topic:", topic);
-  }, [topic]);
+  // useEffect(() => {
+  //   console.log("Updated topic:", topic);
+  // }, [topic]);
   
   //due to batch rendering
   useEffect(() => {
@@ -176,8 +176,9 @@ export default function HomeMain() {
                   <AddCircleRoundedIcon sx={{ color: "", fontSize: 30 }} />
                 </span>
               </div>
-              {todoList.map((item) =>
-                item.id === topicToFetch ? (
+              {todoList.map((item) => {
+                item.id === topicToFetch && console.log("MUSTARRRRD",item)
+                return item.id === topicToFetch ? (
                   Array.isArray(item.data) && item.data.length > 0 ? (
                     item.data.map((SubItem, index) => (
                       <TodoList
@@ -192,7 +193,7 @@ export default function HomeMain() {
                   ) : (
                     <div key={item._id}>No List Found</div>
                   )
-                ) : null
+                ) : null }
               )}
             </div>
           ) : (
