@@ -78,6 +78,14 @@ listRouter.post("/:topicId/new", async function (req, res) {
     });
     console.log("New List Created");
     console.log(newList);
+    await topicModel.findByIdAndUpdate(
+      {
+        _id: topicId,
+      },
+      {
+        $inc: { listCount: 1 },
+      },
+    );
     return res.status(200).json({
       status: "200",
       message: "list created",
@@ -107,7 +115,14 @@ listRouter.delete("/delete/:id", async function (req, res) {
     console.log(noOfDelete);
 
     await todoListModel.findByIdAndDelete(id);
-
+    await topicModel.findByIdAndUpdate(
+      {
+        _id: req.body.topicId,
+      },
+      {
+        $inc: { listCount: -1 },
+      },
+    );
     return res.status(200).json({
       status: "200",
       message: "List Deleted",

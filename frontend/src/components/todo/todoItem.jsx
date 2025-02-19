@@ -5,11 +5,13 @@ import { DetailSidebarContext } from "../../context/detailBar";
 import { TodoContext } from "../../context/todoContext";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteTodo, updateTodo } from "../../services/todo";
+import { TopicContext } from "../../context/topicsContext";
 
 export default function TodoItem({ singleTodo }) {
 
   const { setDetailBarContent, setIsDetailVisible  } = useContext(DetailSidebarContext);
   const { setTodoInDetail,todo,setTodo  } = useContext(TodoContext);
+  const { topicToFetch,topic, setTopic } = useContext(TopicContext);
   const [isStarred, setIsStarred] = useState(null);
   const [ repeat, setRepeat ] = useState(null);
   
@@ -23,6 +25,14 @@ export default function TodoItem({ singleTodo }) {
     setRepeat(singleTodo.daily);
   },[todo])
 
+  useEffect(() => {
+    console.log("Topic to fetch changes ");
+  }, [topicToFetch]);
+
+  useEffect( ()=>{
+    console.log("TodoItem , topic caused useEffect")
+  },[topic])
+
   function displayTodoHandler() {
     setDetailBarContent('todo');
     setTodoInDetail(singleTodo);
@@ -34,7 +44,7 @@ export default function TodoItem({ singleTodo }) {
     console.log("deleting todo")
     console.log("original todo");
     console.log(todo);
-    const response = await deleteTodo(singleTodo._id);
+    const response = await deleteTodo(singleTodo._id, topicToFetch);
     if(response.status === '200') {
       let newTodo = todo.map((list) => ({
         ...list,
@@ -60,6 +70,13 @@ export default function TodoItem({ singleTodo }) {
       console.log(`parent object`);
       console.log(parentObject);
       setTodo(newTodo);
+      setTopic( (prevTopic) => {
+        const safePrevTopic =  Array.isArray(prevTopic) ? prevTopic : [];
+        const updatedTopic = safePrevTopic.map(item =>
+          item._id === topicToFetch ? { ...item, todoCount: item.todoCount - 1 } : item
+      )
+      return updatedTopic;
+    });
     } else {
       setSeverity("error");
       setAlertMessage("Error deleting todo.");

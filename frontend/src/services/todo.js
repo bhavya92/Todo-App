@@ -18,7 +18,7 @@ export const fetchTodos = async (todoListId) => {
   }
 };
 
-export const newTodo = async (todoListId, todoObject) => {
+export const newTodo = async (todoListId, todoObject, topicId) => {
   console.log(`In newTodo service repeat ${todoObject.repeat}`)
   const URL = `http://localhost:3000/todo/${todoListId}/new`;
   try {
@@ -35,6 +35,7 @@ export const newTodo = async (todoListId, todoObject) => {
         daily: todoObject.daily,
         remind: todoObject.remind,
         description: todoObject.description,
+        topicId,
       }),
     });
     const json = await response.json();
@@ -71,7 +72,7 @@ export const updateTodo = async (todoId, todoObject) => {
   }
 };
 
-export const deleteTodo = async (todoId) => {
+export const deleteTodo = async (todoId,topicId) => {
   const URL = `http://localhost:3000/todo/delete/${todoId}`;
 
   try {
@@ -81,6 +82,9 @@ export const deleteTodo = async (todoId) => {
         "Content-Type": "application/json; charset=UTF-8",
       },
       credentials: "include",
+      body : JSON.stringify({
+        topicId,
+      })
     });
 
     const json = await response.json();

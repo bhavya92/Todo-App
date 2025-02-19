@@ -11,7 +11,7 @@ import { AlertContext } from "../../context/alertcontext";
 export default function TodoList({ singleList, todosOfCurrentList, index }) {
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
-  const { topicToFetch } = useContext(TopicContext);
+  const { topicToFetch,setTopic,topic } = useContext(TopicContext);
   const { setIsAlert, setAlertMessage, setSeverity } = useContext(AlertContext);
 
   console.log("todosOfCurrentList");
@@ -24,6 +24,12 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
   useEffect(() => {
     console.log("todoList updated:", todo);
   }, [todo]);
+  useEffect(() => {
+    console.log("Topic to fetch changes ");
+  }, [topicToFetch]);
+  useEffect(() => {
+    console.log("Topic updated ");
+  }, [topic]);
 
   async function newTodoHandler() {
     console.log("INSIDE NEW TODO HANDLER");
@@ -45,7 +51,8 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
       description:"",
     };
     try {
-      const response = await newTodo(singleList._id, todoObject);
+      console.log(`TIDIDITIDID ${topicToFetch._id}`);
+      const response = await newTodo(singleList._id, todoObject, topicToFetch);
       if (response.status === "200") {
         //update todos context
         setTodo((prevTodos) => {
@@ -66,6 +73,13 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
           newTodoRef.current.value = ""
           return updatedTodos;
         });
+        setTopic( (prevTopic) => {
+          const safePrevTopic =  Array.isArray(prevTopic) ? prevTopic : [];
+          const updatedTopic = safePrevTopic.map(item =>
+            item._id === topicToFetch ? { ...item, todoCount: item.todoCount + 1 } : item
+        )
+        return updatedTopic;
+      });
       } else {
         setSeverity("error");
         setAlertMessage("Something went wrong.");
@@ -79,7 +93,7 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
   }
 
   async function deleteListHandler() {
-    const response = await deleteList(singleList._id);
+    const response = await deleteList(singleList._id, topicToFetch);
     try {
       if (response.status === "200") {
         console.log("Inside delete list 200");
@@ -98,6 +112,13 @@ export default function TodoList({ singleList, todosOfCurrentList, index }) {
             return item;
           });
           return updatedData;
+        });
+        setTopic( (prevTopic) => {
+            const safePrevTopic =  Array.isArray(prevTopic) ? prevTopic : [];
+            const updatedTopic = safePrevTopic.map(item =>
+              item._id === topicToFetch ? { ...item, listCount: item.listCount - 1 } : item
+          )
+          return updatedTopic;
         });
       } else {
         setSeverity("error");

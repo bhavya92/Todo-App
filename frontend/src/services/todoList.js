@@ -37,7 +37,7 @@ export const newList = async (topicId, title = "New List") => {
   }
 };
 
-export const deleteList = async (listId) => {
+export const deleteList = async (listId, topicId) => {
   const URL = `http://localhost:3000/list/delete/${listId}`;
   try {
     const response = await fetch(URL, {
@@ -46,6 +46,9 @@ export const deleteList = async (listId) => {
         "Content-Type": "application/json; charset=UTF-8",
       },
       credentials: "include",
+      body: JSON.stringify({
+        topicId,
+      })
     });
     const json = await response.json();
     return json;

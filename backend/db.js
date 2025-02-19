@@ -15,6 +15,8 @@ const userSchema = new Schema({
 const topicSchema = new Schema({
   title: String,
   date:String,
+  listCount : Number,
+  todoCount : Number,
   user: {
     id: ObjectId,
     name: String,

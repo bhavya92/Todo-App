@@ -19,7 +19,7 @@ import { Settingbarcontext } from "../../context/settingbarcontext";
 import { AlertContext } from "../../context/alertcontext";
 
 export default function HomeMain() {
-  const { topicToFetch, setTopicToFetch,topic } = useContext(TopicContext);
+  const { topicToFetch, setTopicToFetch,topic, setTopic } = useContext(TopicContext);
   const { todoList, setTodoList } = useContext(ListContext);
   const { todo, setTodo } = useContext(TodoContext);
   const { detailBarContent } = useContext(DetailSidebarContext);
@@ -37,8 +37,15 @@ export default function HomeMain() {
   console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
   console.log(todoList);
 
-  useEffect(() => { }, [topicToFetch, setTopicToFetch]);
-
+  useEffect(() => { 
+    console.log("AB KYA HOGYA");
+    console.log(topicToFetch);
+  }, [topicToFetch, setTopicToFetch]);
+  
+  useEffect(() => {
+    console.log("Updated topic:", topic);
+  }, [topic]);
+  
   //due to batch rendering
   useEffect(() => {
     console.log("todoList updated:", todoList);
@@ -80,6 +87,15 @@ export default function HomeMain() {
       });
       console.log("Updated todoList");
       console.log(todoList);
+
+      setTopic( (prevTopic) => {
+        const safePrevTopic =  Array.isArray(prevTopic) ? prevTopic : [];
+        const updatedTopic = safePrevTopic.map(item =>
+          item._id === topicToFetch ? { ...item, listCount: item.listCount + 1 } : item
+      );
+        return updatedTopic;
+      })
+
     } else {
       setSeverity("error");
       setAlertMessage("Somethinng went wrong.");
@@ -130,6 +146,7 @@ export default function HomeMain() {
               className="p-6 mt-2 h-full columns-2 gap-8  overflow-y-auto
                      scrollbar-thin scrollbar-thumb-white-600
                     scrollbar-track-white-200"
+              key={new Date()}
             >
               <div className="flex flex-row absolute top-0 right-0 mr-8 items-center justify-center">
                 <div

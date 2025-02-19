@@ -64,10 +64,10 @@ export default function TopicItem() {
                 Created on : {item.date}
               </span>
               <span className="p-1 font-roboto font-light text-white-900">
-                21 Lists
+                {item.listCount} Lists
               </span>
               <span className="p-1 font-roboto font-light text-white-900">
-                46 Tasks
+                {item.todoCount} Tasks
               </span>
               <span
                 className="p-1 hover:scale-110"

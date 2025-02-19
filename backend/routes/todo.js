@@ -39,6 +39,7 @@ todoRouter.post("/:id/new", async function (req, res) {
   const { id } = req.params;
   console.log("new todo hitted");
   console.log("lis Id typeof" + id);
+  console.log(`topicId : ${req.body.topicId}`)
   try {
     userFound = await userModel.findById(req.userId);
 
@@ -77,6 +78,14 @@ todoRouter.post("/:id/new", async function (req, res) {
         name: userFound.firstName,
       },
     });
+    await topicModel.findByIdAndUpdate(
+      {
+        _id: req.body.topicId,
+      },
+      {
+        $inc: { todoCount: 1 },
+      },
+    );
     res.status(200).json({
       status: "200",
       message: "todo addded",
@@ -129,6 +138,14 @@ todoRouter.delete("/delete/:id", async function (req, res) {
   const { id } = req.params;
   try {
     await todoModel.findByIdAndDelete(id);
+    await topicModel.findByIdAndUpdate(
+      {
+        _id: req.body.topicId,
+      },
+      {
+        $inc: { todoCount: -1 },
+      },
+    );
     return res.status(200).json({
       status: "200",
       message: "todo deleted",
