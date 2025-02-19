@@ -1,6 +1,7 @@
 require("dotenv").config();
 const { CronJob } = require('cron');
 const { todoModel } = require('../db');
+const util = require('util');
 const nodemailer = require("nodemailer");
 
 console.log("REMIDER");
@@ -14,12 +15,14 @@ let transporter = nodemailer.createTransport({
 });
 
 async function send_mail(email, text) {
-
+    console.log("In send_mail");
+    console.log(email);
+    console.log(text);
     let mailOptions = {
         from: 'TickMaar <tickmaarkl@gmail.com>',
         to: email,
         subject: 'A gentle reminder',
-        text: `Hello, This mail is to remind you that you have to complete this todo by today : ${text}`,
+        text: `Hello, This mail is to remind you that you have to complete these by today : ${text}`,
     }
 
     try {
@@ -39,6 +42,8 @@ const job = new CronJob('00 00 07 * * *', async function(){
     const month = (today.getMonth() + 1) < 10 ? "0" + (today.getMonth() + 1).toString() : (today.getMonth() + 1).toString(); 
     const date = today.getDate() < 10 ? "0" + today.getDate().toString() : today.getDate().toString(); 
     today = date+"/"+month+"/"+year;
+    console.log("Satrted Cron Job");
+    console.log(today);
     let results;
     try {
         results = await todoModel.aggregate([
@@ -62,10 +67,11 @@ const job = new CronJob('00 00 07 * * *', async function(){
           {
             $group: {
               _id: "$user.email", 
-              userEmail: { $first: "$user.email" }, 
+              email: { $first: "$user.email" }, 
               todos: {
                 $push: {
                   title: "$title",
+                  id:"$_id"
                 },
               },
             },
@@ -73,7 +79,7 @@ const job = new CronJob('00 00 07 * * *', async function(){
           {
             $project: {
               _id: 0, 
-              userEmail: 1,
+              email: 1,
               todos: 1,
             },
           },
@@ -82,15 +88,35 @@ const job = new CronJob('00 00 07 * * *', async function(){
         console.error("Error fetching todos:", error);
         return [];
       }
-    console.log(results);
-    
+    console.log("results fetched in cron");
+    console.log(util.inspect(results, false, null, true /* enable colors */))
+
     const formattedData = results.map(item => ({
-        itemEmail: item.userEmail,
+        email: item.email,
         todos: item.todos.map(todo => todo.title).join(", ")
       }));
 
+      console.log("formattedData");
+      console.log(formattedData);
     for(let i=0;i<formattedData.length;i++) {
-        await send_mail(formattedData[i].userEmail, formattedData[i].todos);
+        console.log(`Inside for ${i}`);
+        console.log(formattedData[i].email);
+        console.log(formattedData[i].todos);
+        await send_mail(formattedData[i].email, formattedData[i].todos);
+    }
+    // TODO: After sending mails set remind to false and dueDate to 1/1/1
+    try {
+        for(const items of results) {
+            const todoIds = items.todos.map(todo => todo.id);
+
+            await todoModel.updateMany(
+                {_id :{ $in:todoIds} },
+                {$set : {remind: false, dueDate: "1/1/1"} }
+            );
+            console.log("DueDate and remind updated");
+        }
+    } catch(err) {
+        console.log("Error Updatind remind and dueDate");
     }
 
 },null,true);
